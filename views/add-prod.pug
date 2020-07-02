@@ -1,0 +1,6 @@
+extends layouts/default.pug
+
+block content
+  form(action="/products", method="post")
+    input(type="text", name="title")
+    button(type="submit") Add Prod

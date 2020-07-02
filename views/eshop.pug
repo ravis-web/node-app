@@ -1,0 +1,10 @@
+extends layouts/default.pug
+
+block content
+  if products.length > 0
+    h3 Product-List
+    ul
+      each product in products
+        li #{product}
+  else
+    h5 No products
