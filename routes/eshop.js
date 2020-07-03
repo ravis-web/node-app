@@ -13,7 +13,6 @@ router.get('/', (req, res) => {
   res.render('eshop', {
     products: prodArr.products,
     docTitle: 'E-Shop',
-    hasProducts: prodArr.products.length > 0
   });
 
   /* --- serve static ---

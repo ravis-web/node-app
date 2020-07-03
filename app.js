@@ -2,7 +2,6 @@ const path = require('path');
 
 const express = require('express');
 const bParser = require('body-parser');
-const expHbar = require('express-handlebars');
 
 const admin = require('./routes/admin');
 const eshop = require('./routes/eshop');
@@ -12,8 +11,19 @@ const eshop = require('./routes/eshop');
 const app = express();
 
 
-// express - configs
-/* --- handlebars ---*/
+// template-engines
+/* --- ejs ---*/
+app.set('view engine', 'ejs');
+app.set('views', 'views');
+
+/* --- pug ---
+app.set('view engine', 'pug');
+app.set('views', 'views');
+*/
+
+/* --- handlebars ---
+const expHbar = require('express-handlebars');
+
 app.engine('hbs', expHbar({
   layoutsDir: 'views/layouts',
   defaultLayout: 'default',
@@ -21,10 +31,6 @@ app.engine('hbs', expHbar({
 })); // reg handlebars
 
 app.set('view engine', 'hbs');
-app.set('views', 'views');
-
-/* --- pug ---
-app.set('view engine', 'pug');
 app.set('views', 'views');
 */
 
