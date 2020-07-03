@@ -7,15 +7,24 @@ const appDir = require('../utils/abs-path');
 // express-router
 const router = express.Router();
 
+// cross-accessible
+const prodArr = [];
+
 router.get('/add-product', (req, res, next) => {
-	res.sendFile(
-		path.join(appDir, 'views', 'add-prod.html')
-	);
+  res.render('add-prod', { docTitle: 'Add Product' })
+
+  /* --- serve static ---
+  res.sendFile(
+    path.join(appDir, 'views', 'add-prod.html')
+  );
+  */
 });
 
 router.post('/products', (req, res, next) => {
-	console.log(req.body);
-	res.redirect('/'); // re-direct
+  prodArr.push(req.body.title);
+  res.redirect('/'); // re-direct
 });
 
-module.exports = router;
+exports.routes = router;
+exports.products = prodArr;
+// module.exports = router;
