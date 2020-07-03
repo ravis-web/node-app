@@ -13,7 +13,7 @@ const prodArr = [];
 router.get('/add-product', (req, res, next) => {
   res.render('add-prod', { docTitle: 'Add Product' })
 
-  /* --- serve static-file
+  /* --- serve static ---
   res.sendFile(
     path.join(appDir, 'views', 'add-prod.html')
   );

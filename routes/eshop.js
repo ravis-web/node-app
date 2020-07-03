@@ -10,7 +10,11 @@ const prodArr = require('./admin');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  res.render('eshop', { products: prodArr.products, docTitle: 'E-Shop' });
+  res.render('eshop', {
+    products: prodArr.products,
+    docTitle: 'E-Shop',
+    hasProducts: prodArr.products.length > 0
+  });
 
   /* --- serve static ---
   res.sendFile(
