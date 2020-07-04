@@ -6,6 +6,8 @@ const bParser = require('body-parser');
 const admin = require('./routes/admin');
 const eshop = require('./routes/eshop');
 
+const errCtrl = require('./controllers/errorControl');
+
 
 // init express app
 const app = express();
@@ -44,15 +46,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(admin.routes);
 app.use(eshop.routes);
 
-app.use((req, res) => {
-  res.status(404).render('404-page', { docTitle: 'Page Not Found' });
+app.use(errCtrl.err404);
 
-  /* --- serve static ---
-  res.status(404).sendFile(
-    path.join(__dirname, 'views', '404-page.html')
-  );
-  */
-});
+/* --- serve static ---
+res.status(404).sendFile(
+  path.join(__dirname, 'views', '404-page.html')
+);
+*/
 
 
 // server
