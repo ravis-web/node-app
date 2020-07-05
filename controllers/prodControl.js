@@ -1,8 +1,9 @@
 const Product = require('../models/Product');
 
 exports.addProd = (req, res, next) => {
-  res.render('add-prod', {
-    docTitle: 'Add Product'
+  res.render('products/add-prod', {
+    docTitle: 'Add Product',
+    path: req.url
   });
 };
 
@@ -14,9 +15,10 @@ exports.saveProd = (req, res, next) => {
 
 exports.fetchProds = (req, res) => {
   Product.fetchProds(products => {
-    res.render('eshop', {
+    res.render('e-shop/eshop', {
       products: products,
       docTitle: 'E-Shop',
+      path: req.url
     });
   });
 };

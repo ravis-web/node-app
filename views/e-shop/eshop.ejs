@@ -1,0 +1,31 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="styles/prod.css">
+<%- include('../includes/navb.ejs') %>
+
+<main>
+  <% if(products.length > 0) { %>
+  <div class="grid">
+    <% for(product of products) { %>
+    <article class="card product-item">
+      <header class="card__header">
+        <h3 class="product__title"><%= product.title %></h3>
+      </header>
+      <div class="card__image">
+        <img src="/images/box-pack.png" alt="<%= product.title %>">
+      </div>
+      <div class="card__content">
+        <h5 class="product__price">₹1,299/-</h5>
+        <p class="product_description">Product Description Here</p>
+      </div>
+      <div class="card__actions">
+        <button class="btn">Details</button>
+      </div>
+    </article>
+    <% } %>
+  </div>
+  <% } else { %>
+  <h5>No products found.</h5>
+  <% } %>
+</main>
+
+<%- include('../includes/close.ejs') %>
