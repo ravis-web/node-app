@@ -1,9 +1,50 @@
+</head>
+
+<%const nav = {
+    'Shop': '/',
+    'Product': '/product',
+    'Product List': '/products',
+    'Add Product': '/add-product',
+    'Cart': '/cart',
+    'Orders': '/orders',
+  };
+%>
+
 <body>
-  <header>
-    <nav>
-      <ul>
-        <li><a href="/">Shop</a></li>
-        <li><a href="/add-product">Add Product</a></li>
+  <div class="backdrop"></div>
+  <header class="main-header">
+    <button id="side-menu-toggle">Menu</button>
+    <nav class="main-header__nav">
+      <ul class="main-header__item-list">
+        <%for (const key in nav) {
+            if (nav[key] === path) { %>
+        <li class="main-header__item">
+          <a class="active" href="<%= nav[key] %>"><%= key %></a>
+        </li>
+        <%  } else { %>
+        <li class="main-header__item">
+          <a href="<%= nav[key] %>"><%= key %></a>
+        </li>
+        <% }
+          }
+        %>
       </ul>
     </nav>
   </header>
+
+  <nav class="mobile-nav">
+    <ul class="mobile-nav__item-list">
+      <%for (const key in nav) {
+        if (nav[key] === path) { %>
+      <li class="mobile-nav__item">
+        <a class="active" href="<%= nav[key] %>"><%= key %></a>
+      </li>
+      <%  } else { %>
+      <li class="mobile-nav__item">
+        <a href="<%= nav[key] %>"><%= key %></a>
+      </li>
+      <% }
+      }
+      %>
+    </ul>
+  </nav>
