@@ -5,6 +5,7 @@ const bParser = require('body-parser');
 
 const admin = require('./routes/admin');
 const eshop = require('./routes/eshop');
+const dbase = require('./utils/db-conn');
 
 const errCtrl = require('./controllers/errorControl');
 
@@ -54,6 +55,11 @@ res.status(404).sendFile(
 );
 */
 
+
+// database-conn
+dbase.execute('SELECT * FROM products')
+  .then(([res]) => console.log(res[0]))
+  .catch(err => console.log(err));
 
 // server
 app.listen(5000);
