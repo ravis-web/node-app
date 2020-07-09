@@ -56,10 +56,16 @@ res.status(404).sendFile(
 */
 
 
-// database-conn
+// Sequelize
+console.log(dbase);
+
+
+/* --- MySQL database ---
 dbase.execute('SELECT * FROM products')
   .then(([res]) => console.log(res[0]))
   .catch(err => console.log(err));
+*/
+
 
 // server
 app.listen(5000);
