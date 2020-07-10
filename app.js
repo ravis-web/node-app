@@ -8,6 +8,7 @@ const eshop = require('./routes/eshop');
 const dbase = require('./utils/db-conn');
 
 const errCtrl = require('./controllers/errorControl');
+const { log } = require('console');
 
 
 // init express app
@@ -57,7 +58,11 @@ res.status(404).sendFile(
 
 
 // Sequelize
-console.log(dbase);
+dbase.sync() // db-sync
+  .then(result => {
+    if (result) app.listen(5000); // start-server
+  })
+  .catch(err => console.log(err));
 
 
 /* --- MySQL database ---
@@ -65,10 +70,6 @@ dbase.execute('SELECT * FROM products')
   .then(([res]) => console.log(res[0]))
   .catch(err => console.log(err));
 */
-
-
-// server
-app.listen(5000);
 
 
 /* --- Vanilla Node ---

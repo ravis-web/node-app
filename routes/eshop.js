@@ -1,11 +1,15 @@
 const express = require('express');
 
 const prodCtrl = require('../controllers/prodControl');
+const ecartCtrl = require('../controllers/ecartControl');
 
 // express-router
 const router = express.Router();
 
-router.get('/', prodCtrl.fetchProds);
+router.get('/', prodCtrl.indexPage);
+router.get('/shop', prodCtrl.fetchProds);
+router.get('/cart', ecartCtrl.fetchCart);
+router.get('/orders', ecartCtrl.fetchOrders);
 
 /* --- serve static ---
 const path = require('path');

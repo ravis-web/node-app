@@ -1,3 +1,27 @@
+/* --- Sequelize Model --- */
+const Sequelize = require('sequelize');
+const sequelize = require('../utils/db-conn');
+
+const Product = sequelize.define('products', {
+  id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true
+  },
+  title: Sequelize.STRING,
+  image: Sequelize.STRING,
+  price: {
+    type: Sequelize.DOUBLE,
+    allowNull: false
+  },
+  desc: Sequelize.STRING
+});
+
+module.exports = Product;
+
+
+/* --- R/W data through FS ---
 const fs = require('fs');
 const path = require('path');
 
@@ -37,8 +61,9 @@ module.exports = class Product {
     });
   }
 
-  // static class method 
+  // static class method
   static fetchProds(callback) {
     getData(callback);
   }
 }
+*/

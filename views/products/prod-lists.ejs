@@ -1,0 +1,85 @@
+<%- include('../includes/head.ejs') %>
+
+<link rel="stylesheet" href="/styles/prod.css">
+
+<style>
+  table {
+    margin: 2rem;
+    border-collapse: collapse;
+    width: 50%;
+  }
+
+  th {
+    background-color: #bae8e8;
+    text-align: center;
+    padding: 10px 20px;
+  }
+
+  td {
+    text-align: left;
+    padding: 6px;
+  }
+
+  td img {
+    max-height: 6rem;
+  }
+
+  td.curren {
+    text-align: right;
+    padding-right: 18px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+</style>
+
+<%- include('../includes/navb.ejs') %>
+
+<main>
+  <% if(products.length > 0) { %>
+  <div class="grid">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Title</th>
+          <th scope="col">Image</th>
+          <th scope="col">Price</th>
+          <th scope="col">Description</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(product of products) { %>
+        <tr>
+          <td class="centered"><%= product.id %></td>
+          <td><%= product.title %></td>
+          <td class="centered"><img src="<%= product.image %>" alt="<%= product.title %>"></td>
+          <td class="curren">₹ <%= product.price %>/-</td>
+          <td><%= product.desc %></td>
+          <td>
+            <div class="card__actions">
+              <a href="/edit-prod/<%= product.id %>" class="btn">Edit</a>
+              <form action="/delt-prod" method="post"
+                onsubmit="return confirm('Are you sure you want to delete this ?')">
+                <input type="hidden" name="prodId" value="<%= product.id %>" />
+                <button class="btn">Delete</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+  <% } else { %>
+  <h5>No products found.</h5>
+  <% } %>
+  <div class="card__actions">
+    <a href="/add-prod" class="btn">New Product</a>
+  </div>
+
+</main>
+
+<%- include('../includes/close.ejs') %>
