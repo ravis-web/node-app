@@ -23,6 +23,19 @@ exports.saveProd = (req, res) => {
   // product.saveProd();
 };
 
+exports.fetchProd = (req, res) => {
+  Product.findByPk(req.params.id)
+    .then(prod => {
+      res.render('e-shop/detail', {
+        product: prod,
+        docTitle: 'Product Details',
+        path: '/shop',
+        user: req.user
+      });
+    })
+    .catch(err => console.log(err));
+};
+
 exports.fetchProds = (req, res) => {
   req.user.getProducts()
     .then(prods => {

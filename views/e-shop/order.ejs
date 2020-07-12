@@ -1,11 +1,33 @@
 <%- include('../includes/head.ejs') %>
 <link rel="stylesheet" href="/styles/prod.css">
+<link rel="stylesheet" href="/styles/ecart.css">
 <%- include('../includes/navb.ejs') %>
 <%- include('../includes/users.ejs') %>
 
 <main>
-  <div>
+  <div class="centered">
     <h3>Your Orders</h3>
+    <% if(orders.length > 0) { %>
+    <ul class="cart__item-list">
+      <% orders.forEach(order => { %>
+      <li class="cart__item">
+        <h5><%= order.id %></h5>
+        <ul>
+          <% order.products.forEach(product => { %>
+          <li><%= product.title %> - x<%= product.orderItem.quantity %></li>
+          <% }) %>
+        </ul>
+      </li>
+      <% })%>
+    </ul>
+    <a href="/shop" class="btn"> Shopping </a>
+    <a href="/checkout" class="btn"> Checkout </a>
+    <% } else { %>
+    <div class="centered">
+      <h5> No orders here. </h5>
+      <a href="/shop" class="btn"> Continue Shopping </a>
+    </div>
+    <% } %>
   </div>
 </main>
 

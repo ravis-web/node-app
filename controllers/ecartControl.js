@@ -48,22 +48,45 @@ exports.remFromCart = (req, res) => {
 };
 
 exports.addToOrder = (req, res) => {
+  let usrCart = [];
+  let usrOrder = {};
   req.user.getCart()
-    .then(cart => cart.getProducts())
+    .then(cart => {
+      usrCart = cart;
+      return cart.getProducts()
+    })
     .then(prods => {
-      res.render('e-shop/e-cart', {
-        products: prods,
-        docTitle: 'Cart',
+      return req.user.createOrder()
+        .then(order => {
+          usrOrder = order;
+          return order.addProducts(prods.map(prod => {
+            prod.orderItem = { quantity: prod.cartItem.quantity };
+            return prod;
+          }))
+        })
+        .catch(err => console.log(err))
+    })
+    .then(result => { usrCart.setProducts(null) })
+    .then(result => res.redirect('/orders'))
+    .catch(err => console.log(err));
+};
+
+exports.fetchOrders = (req, res) => {
+  req.user.getOrders({ include: ['products'] }) // eager-loading
+    .then(orders => {
+      res.render('e-shop/order', {
+        orders: orders,
+        docTitle: 'Orders',
         path: req.url,
         user: req.user
       });
     })
-    .catch();
+    .catch(err => console.log(err));
 };
 
-exports.fetchOrders = (req, res) => {
-  res.render('e-shop/order', {
-    docTitle: 'Orders',
+exports.checkOut = (req, res) => {
+  res.render('e-shop/ckout', {
+    docTitle: 'Checkout',
     path: req.url,
     user: req.user
   });

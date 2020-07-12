@@ -79,6 +79,10 @@ User.hasOne(Cart);
 Cart.belongsTo(User);
 Cart.belongsToMany(Prod, { through: CartItem }); // many-many thru junct-model
 Prod.belongsToMany(Cart, { through: CartItem });
+User.hasMany(Order);
+Order.belongsTo(User);
+Order.belongsToMany(Prod, { through: OrderItem });
+Prod.belongsToMany(Order, { through: OrderItem }); // inv-mapping
 
 
 // sequelize : db-sync
@@ -93,8 +97,8 @@ dbase
     return usr;
   })
   .then(usr => usr.createCart()) // create-cart
-  .then(crt => {
-    if (crt) app.listen(5000); // start-server
+  .then(cart => {
+    if (cart) app.listen(5000); // start-server
     console.log('server : online');
   })
   .catch(err => console.log(err));
