@@ -7,6 +7,9 @@ const admin = require('./routes/admin');
 const eshop = require('./routes/eshop');
 const dbase = require('./utils/db-conn');
 
+const Prod = require('./models/Product');
+const User = require('./models/UserAcc');
+
 const errCtrl = require('./controllers/errorControl');
 const { log } = require('console');
 
@@ -43,6 +46,15 @@ app.set('views', 'views');
 app.use(bParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use((req, res, nxt) => {
+  User.findByPk(1)
+    .then(usr => {
+      req.user = usr;
+      nxt();
+    })
+    .catch(err => console.log(err));
+});
+
 
 // routes
 app.use(admin.routes);
@@ -56,11 +68,24 @@ res.status(404).sendFile(
 );
 */
 
+// associations/relations
+Prod.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
+User.hasMany(Prod); // inv-mapping
 
-// Sequelize
-dbase.sync() // db-sync
-  .then(result => {
-    if (result) app.listen(5000); // start-server
+
+// sequelize : db-sync
+dbase
+  .sync()
+  // .sync({ force: true }) // db-overwrite (dev)
+  .then(msg => User.findByPk(1))
+  .then(usr => {
+    if (!usr) {
+      User.create({ name: 'Admin', mail: 'admin@localhost.com' });
+    }
+    return usr;
+  })
+  .then(usr => {
+    if (usr) app.listen(5000); // start-server
   })
   .catch(err => console.log(err));
 

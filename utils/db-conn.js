@@ -5,7 +5,7 @@ const config = require('./sql-conn');
 
 
 /* Sequelize : ORM library */
-const Sequelize = require('sequelize');
+const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(
   config.database,

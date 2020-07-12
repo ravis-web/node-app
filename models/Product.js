@@ -1,5 +1,5 @@
 /* --- Sequelize Model --- */
-const Sequelize = require('sequelize');
+const { Sequelize } = require('sequelize');
 const sequelize = require('../utils/db-conn');
 
 const Product = sequelize.define('products', {

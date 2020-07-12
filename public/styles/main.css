@@ -213,6 +213,11 @@ form {
   color: white;
 }
 
+.right {
+  text-align: right;
+  padding-right: 6rem;
+}
+
 @media (min-width: 768px) {
   .main-header__nav {
     display: flex;

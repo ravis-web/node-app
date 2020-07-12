@@ -3,12 +3,14 @@ const Product = require('../models/Product');
 exports.addProd = (req, res) => {
   res.render('products/add-prod', {
     docTitle: 'Add Product',
-    path: '/products'
+    path: '/products',
+    user: req.user
   });
 };
 
 exports.saveProd = (req, res) => {
-  Product.create({
+  // Product.create()
+  req.user.createProduct({
     title: req.body.title,
     image: req.body.image,
     price: req.body.price,
@@ -22,7 +24,7 @@ exports.saveProd = (req, res) => {
 };
 
 exports.fetchProds = (req, res) => {
-  Product.findAll()
+  req.user.getProducts()
     .then(prods => {
       let view, docTitle;
       if (req.url === '/shop') {
@@ -35,7 +37,8 @@ exports.fetchProds = (req, res) => {
       res.render(view, {
         products: prods,
         docTitle: docTitle,
-        path: req.url
+        path: req.url,
+        user: req.user
       });
     })
     .catch(err => console.log(err));
@@ -47,7 +50,8 @@ exports.editProd = (req, res) => {
       res.render('products/edit-prod', {
         product: prod,
         docTitle: 'Edit Product',
-        path: '/products'
+        path: '/products',
+        user: req.user
       });
     })
     .catch(err => console.log(err));
@@ -78,6 +82,7 @@ exports.deltProd = (req, res) => {
 exports.indexPage = (req, res) => {
   res.render('e-shop/index', {
     docTitle: 'Home',
-    path: req.url
+    path: req.url,
+    user: req.user
   });
 };
