@@ -1,11 +1,38 @@
 <%- include('../includes/head.ejs') %>
 <link rel="stylesheet" href="/styles/prod.css">
+<link rel="stylesheet" href="/styles/ecart.css">
 <%- include('../includes/navb.ejs') %>
 <%- include('../includes/users.ejs') %>
 
 <main>
-  <div>
+  <div class="centered">
     <h3>Cart Items</h3>
+    <% if(products.length > 0) { %>
+    <ul class="cart__item-list">
+      <% products.forEach(product => { %>
+      <li class="cart__item">
+        <p><%= product.title %></p>
+        <p><%= product.cartItem.quantity %></p>
+        <p>₹ <%= product.cartItem.quantity * product.price %>/-</p>
+        <form action="/rem-item" method="post">
+          <input type="hidden" name="prodId" value="<%= product.id %>">
+          <button class="btn danger" type="submit">Remove</button>
+        </form>
+      </li>
+      <% })%>
+    </ul>
+    <div class="centered">
+      <form action="/new-order" method="post">
+        <button type="submit" class="btn">Order Now</button>
+        <a href="/shop" class="btn"> Add Items </a>
+      </form>
+    </div>
+    <% } else { %>
+    <div class="centered">
+      <h5> No items here. </h5>
+      <a href="/shop" class="btn"> Continue Shopping </a>
+    </div>
+    <% } %>
   </div>
 </main>
 

@@ -11,6 +11,10 @@ router.get('/shop', prodCtrl.fetchProds);
 router.get('/cart', ecartCtrl.fetchCart);
 router.get('/orders', ecartCtrl.fetchOrders);
 
+router.post('/cart', ecartCtrl.addToCart);
+router.post('/rem-item', ecartCtrl.remFromCart);
+router.post('/new-order', ecartCtrl.addToOrder);
+
 /* --- serve static ---
 const path = require('path');
 const appDir = require('../utils/abs-path');

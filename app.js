@@ -7,8 +7,12 @@ const admin = require('./routes/admin');
 const eshop = require('./routes/eshop');
 const dbase = require('./utils/db-conn');
 
+const User = require('./models/User');
 const Prod = require('./models/Product');
-const User = require('./models/UserAcc');
+const Cart = require('./models/Cart');
+const CartItem = require('./models/CartItem');
+const Order = require('./models/Order');
+const OrderItem = require('./models/OrderItem');
 
 const errCtrl = require('./controllers/errorControl');
 const { log } = require('console');
@@ -71,6 +75,10 @@ res.status(404).sendFile(
 // associations/relations
 Prod.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
 User.hasMany(Prod); // inv-mapping
+User.hasOne(Cart);
+Cart.belongsTo(User);
+Cart.belongsToMany(Prod, { through: CartItem }); // many-many thru junct-model
+Prod.belongsToMany(Cart, { through: CartItem });
 
 
 // sequelize : db-sync
@@ -80,12 +88,14 @@ dbase
   .then(msg => User.findByPk(1))
   .then(usr => {
     if (!usr) {
-      User.create({ name: 'Admin', mail: 'admin@localhost.com' });
+      return User.create({ name: 'Admin', mail: 'admin@localhost' });
     }
     return usr;
   })
-  .then(usr => {
-    if (usr) app.listen(5000); // start-server
+  .then(usr => usr.createCart()) // create-cart
+  .then(crt => {
+    if (crt) app.listen(5000); // start-server
+    console.log('server : online');
   })
   .catch(err => console.log(err));
 

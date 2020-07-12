@@ -20,12 +20,16 @@
       </div>
       <div class="card__actions">
         <button class="btn">Details</button>
+        <form action="/cart" method="post">
+          <button class="btn" type="submit"> Add to Cart</button>
+          <input type="hidden" name="prodId" value="<%= product.id %>">
+        </form>
       </div>
     </article>
     <% } %>
   </div>
   <% } else { %>
-  <h5>No products found.</h5>
+  <h5 class="centered">No products found.</h5>
   <% } %>
 </main>
 

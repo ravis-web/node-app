@@ -1,5 +1,5 @@
 /* --- User Model --- */
-const { Sequelize } = require('sequelize');
+const Sequelize = require('sequelize');
 const sequelize = require('../utils/db-conn');
 
 const User = sequelize.define('user', {

@@ -203,14 +203,14 @@ form {
 }
 
 .btn.danger {
-  color: rgb(108, 16, 16);
-  border-color: rgb(108, 16, 16);
+  color: white;
+  border-color: #f83636;
 }
 
 .btn.danger:hover,
 .btn.danger:active {
-  background: rgb(108, 16, 16);
-  color: white;
+  background: white;
+  color: #f83636;
 }
 
 .right {
