@@ -3,19 +3,11 @@ const path = require('path');
 const express = require('express');
 const bParser = require('body-parser');
 
-const admin = require('./routes/admin');
-const eshop = require('./routes/eshop');
+// const admin = require('./routes/admin');
+// const eshop = require('./routes/eshop');
 const dbase = require('./utils/db-conn');
 
-const User = require('./models/User');
-const Prod = require('./models/Product');
-const Cart = require('./models/Cart');
-const CartItem = require('./models/CartItem');
-const Order = require('./models/Order');
-const OrderItem = require('./models/OrderItem');
-
 const errCtrl = require('./controllers/errorControl');
-const { log } = require('console');
 
 
 // init express app
@@ -50,7 +42,37 @@ app.set('views', 'views');
 app.use(bParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((req, res, nxt) => {
+
+// routes
+// app.use(admin.routes);
+// app.use(eshop.routes);
+
+app.use(errCtrl.err404);
+
+
+// mongo-conn
+dbase(cl => {
+  console.log(cl);
+  app.listen(5000);
+});
+
+
+/* --- serve static ---
+res.status(404).sendFile(
+  path.join(__dirname, 'views', '404-page.html')
+);
+*/
+
+
+/* --- Sequelize ---
+ const User = require('./models/User');
+ const Prod = require('./models/Product');
+ const Cart = require('./models/Cart');
+ const CartItem = require('./models/CartItem');
+ const Order = require('./models/Order');
+ const OrderItem = require('./models/OrderItem');
+
+ app.use((req, res, nxt) => {
   User.findByPk(1)
     .then(usr => {
       req.user = usr;
@@ -58,19 +80,6 @@ app.use((req, res, nxt) => {
     })
     .catch(err => console.log(err));
 });
-
-
-// routes
-app.use(admin.routes);
-app.use(eshop.routes);
-
-app.use(errCtrl.err404);
-
-/* --- serve static ---
-res.status(404).sendFile(
-  path.join(__dirname, 'views', '404-page.html')
-);
-*/
 
 // associations/relations
 Prod.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
@@ -83,7 +92,6 @@ User.hasMany(Order);
 Order.belongsTo(User);
 Order.belongsToMany(Prod, { through: OrderItem });
 Prod.belongsToMany(Order, { through: OrderItem }); // inv-mapping
-
 
 // sequelize : db-sync
 dbase
@@ -102,6 +110,7 @@ dbase
     console.log('server : online');
   })
   .catch(err => console.log(err));
+*/
 
 
 /* --- MySQL database ---

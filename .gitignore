@@ -9,3 +9,4 @@ package-lock.json
 
 # database
 utils/sql-conn.js
+utils/nosql-db.js

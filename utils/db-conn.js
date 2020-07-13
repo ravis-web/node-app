@@ -1,10 +1,25 @@
-/* --- MySQL Connection --- */
+/* --- Database Connection --- */
 
 // using private keys
+const cluster = require('./nosql-db');
+
+/* MongoDB */
+const mongodb = require('mongodb');
+
+const MongoClient = mongodb.MongoClient;
+
+const mongoConnect = callback => {
+  MongoClient.connect(cluster)
+    .then(client => callback(client))
+    .catch(err => console.log(err));
+};
+
+module.exports = mongoConnect;
+
+
+/* --- Sequelize : ORM library ---
 const config = require('./sql-conn');
 
-
-/* Sequelize : ORM library */
 const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(
@@ -18,6 +33,7 @@ const sequelize = new Sequelize(
 );
 
 module.exports = sequelize;
+*/
 
 
 /* --- MySQL2 ---
