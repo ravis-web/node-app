@@ -3,9 +3,10 @@ const path = require('path');
 const express = require('express');
 const bParser = require('body-parser');
 
-// const admin = require('./routes/admin');
+const admin = require('./routes/admin');
 // const eshop = require('./routes/eshop');
-const dbase = require('./utils/db-conn');
+
+const Mongo = require('./utils/db-conn');
 
 const errCtrl = require('./controllers/errorControl');
 
@@ -44,17 +45,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 // routes
-// app.use(admin.routes);
+app.use(admin.routes);
 // app.use(eshop.routes);
 
 app.use(errCtrl.err404);
 
 
-// mongo-conn
-dbase(cl => {
-  console.log(cl);
-  app.listen(5000);
-});
+// dbase-conn
+Mongo.connect(() => app.listen(5000)); // start-server-callback
 
 
 /* --- serve static ---

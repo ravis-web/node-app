@@ -8,13 +8,27 @@ const mongodb = require('mongodb');
 
 const MongoClient = mongodb.MongoClient;
 
+let _db; // undefined local var
+
 const mongoConnect = callback => {
-  MongoClient.connect(cluster)
-    .then(client => callback(client))
-    .catch(err => console.log(err));
+  MongoClient.connect(cluster, { useUnifiedTopology: true })
+    .then(client => {
+      _db = client.db(); // db-instance
+      callback();
+    })
+    .catch(err => {
+      console.log('cluster-conn-failure');
+      throw err;
+    });
 };
 
-module.exports = mongoConnect;
+const getDatabase = () => {
+  if (_db) return _db;
+  else throw 'No database found.';
+};
+
+exports.connect = mongoConnect;
+exports.mongoDB = getDatabase;
 
 
 /* --- Sequelize : ORM library ---

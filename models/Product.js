@@ -1,4 +1,26 @@
-/* --- Sequelize Model --- */
+const mongoDB = require('../utils/db-conn').mongoDB;
+
+class Product {
+  constructor(title, image, price, descr,) {
+    this.title = title;
+    this.image = image;
+    this.price = price;
+    this.descr = descr;
+  }
+
+  save() {
+    const db = mongoDB();
+    return db.collection('products').insertOne(this)
+      .then(msg => console.log(msg.ops))
+      .catch(err => { throw err });
+  }
+
+}
+
+module.exports = Product;
+
+
+/* --- Sequelize Model ---
 const Sequelize = require('sequelize');
 const sequelize = require('../utils/db-conn');
 
@@ -17,8 +39,7 @@ const Product = sequelize.define('product', {
   },
   desc: Sequelize.STRING
 });
-
-module.exports = Product;
+*/
 
 
 /* --- R/W data through FS ---
