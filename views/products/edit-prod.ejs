@@ -22,10 +22,10 @@
       <input type="number" name="price" id="price" step="0.01" min="0.00" value="<%= product.price %>" />
     </div>
     <div class="form-control">
-      <label for="desc">Description</label>
-      <textarea name="desc" id="desc" rows="5"><%= product.desc %></textarea>
+      <label for="descr">Description</label>
+      <textarea name="descr" id="descr" rows="5"><%= product.descr %></textarea>
     </div>
-    <input type="hidden" name="prodId" value="<%= product.id %>" />
+    <input type="hidden" name="prodId" value="<%= product._id %>" />
     <button class="btn" type="submit">Update</button>
     <a href="/products" class="btn">Cancel</a>
   </form>

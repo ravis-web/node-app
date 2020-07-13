@@ -4,7 +4,7 @@ const express = require('express');
 const bParser = require('body-parser');
 
 const admin = require('./routes/admin');
-// const eshop = require('./routes/eshop');
+const eshop = require('./routes/eshop');
 
 const Mongo = require('./utils/db-conn');
 
@@ -43,10 +43,15 @@ app.set('views', 'views');
 app.use(bParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use((req, res, nxt) => {
+  req.user = 'RX-Admin'; // set-user
+  nxt();
+});
+
 
 // routes
 app.use(admin.routes);
-// app.use(eshop.routes);
+app.use(eshop.routes);
 
 app.use(errCtrl.err404);
 
