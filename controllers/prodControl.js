@@ -15,7 +15,7 @@ exports.saveProd = (req, res) => {
     req.body.price,
     req.body.descr,
     null,
-    req.userId
+    req.user._id
   );
   product.save()
     .then(reslt => res.redirect('/products'))

@@ -31,32 +31,14 @@ exports.remFromCart = (req, res) => {
     .catch(err => console.log(err));
 };
 
-/* exports.addToOrder = (req, res) => {
-  let usrCart = [];
-  let usrOrder = {};
-  req.user.getCart()
-    .then(cart => {
-      usrCart = cart;
-      return cart.getProducts()
-    })
-    .then(prods => {
-      return req.user.createOrder()
-        .then(order => {
-          usrOrder = order;
-          return order.addProducts(prods.map(prod => {
-            prod.orderItem = { quantity: prod.cartItem.quantity };
-            return prod;
-          }))
-        })
-        .catch(err => console.log(err))
-    })
-    .then(result => { usrCart.setProducts(null) })
+exports.addToOrder = (req, res) => {
+  req.user.createOrder()
     .then(result => res.redirect('/orders'))
     .catch(err => console.log(err));
 };
 
 exports.fetchOrders = (req, res) => {
-  req.user.getOrders({ include: ['products'] }) // eager-loading
+  req.user.fetchOrders()
     .then(orders => {
       res.render('e-shop/order', {
         orders: orders,
@@ -74,7 +56,7 @@ exports.checkOut = (req, res) => {
     path: req.url,
     user: req.user
   });
-};*/
+};
 
 exports.indexPage = (req, res) => {
   res.render('e-shop/index', {
