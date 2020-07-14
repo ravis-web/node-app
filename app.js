@@ -22,6 +22,35 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
+
+// register middleware
+app.use(bParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use((req, res, nxt) => {
+  User.findId('5f0d5d57df6ebed9f556fb0c')
+    .then(user => {
+      req.user = new User(user.name, user.email, user.cart, user._id);
+      // req.user = user.name; // set-userId
+      // req.userId = user._id; // set-userId
+      nxt();
+    })
+    .catch(err => console.log('No user found'));
+});
+
+
+// routes
+app.use(admin.routes);
+app.use(eshop.routes);
+
+app.use(errCtrl.err404);
+
+
+// dbase-conn
+Mongo.connect(() => app.listen(5000)); // start-server-callback
+
+
+
 /* --- pug ---
 app.set('view engine', 'pug');
 app.set('views', 'views');
@@ -41,37 +70,13 @@ app.set('views', 'views');
 */
 
 
-// register middleware
-app.use(bParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.use((req, res, nxt) => {
-  User.findId('5f0d5d57df6ebed9f556fb0c')
-    .then(user => {
-      req.user = user.name; // set-userId
-      req.userId = user._id; // set-userId
-      nxt();
-    })
-    .catch(err => console.log('No user found'));
-});
-
-
-// routes
-app.use(admin.routes);
-app.use(eshop.routes);
-
-app.use(errCtrl.err404);
-
-
-// dbase-conn
-Mongo.connect(() => app.listen(5000)); // start-server-callback
-
 
 /* --- serve static ---
 res.status(404).sendFile(
   path.join(__dirname, 'views', '404-page.html')
 );
 */
+
 
 
 /* --- Sequelize ---
@@ -123,11 +128,13 @@ dbase
 */
 
 
+
 /* --- MySQL database ---
 dbase.execute('SELECT * FROM products')
   .then(([res]) => console.log(res[0]))
   .catch(err => console.log(err));
 */
+
 
 
 /* --- Vanilla Node ---

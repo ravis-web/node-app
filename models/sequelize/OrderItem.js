@@ -1,8 +1,8 @@
-/* --- Cart : Join Model --- */
+/* --- Sequelize - Order : Join Model --- */
 const Sequelize = require('sequelize');
-const sequelize = require('../utils/db-conn');
+const sequelize = require('../../utils/db-conn');
 
-const CartItem = sequelize.define('cartItem', {
+const OrderItem = sequelize.define('orderItem', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -12,4 +12,4 @@ const CartItem = sequelize.define('cartItem', {
   quantity: Sequelize.INTEGER
 });
 
-module.exports = CartItem;
+module.exports = OrderItem;

@@ -5,9 +5,11 @@ const mongoDB = require('../utils/db-conn').mongoDB;
 const ObjectId = mongo.ObjectId;
 
 class User {
-  constructor(name, email) {
+  constructor(name, email, cart, userId) {
     this.name = name;
     this.email = email;
+    this.cart = cart;
+    this.userId = userId;
   }
 
   save() {
@@ -24,19 +26,3 @@ class User {
 }
 
 module.exports = User;
-
-/* --- Sequelize Model ---
-const Sequelize = require('sequelize');
-const sequelize = require('../utils/db-conn');
-
-const User = sequelize.define('user', {
-  id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    allowNull: false,
-    primaryKey: true
-  },
-  name: Sequelize.STRING,
-  mail: Sequelize.STRING
-});
-*/

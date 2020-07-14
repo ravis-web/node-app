@@ -1,4 +1,5 @@
-const Product = require("../models/Prod");
+/* --- Sequelize Code --- */
+const Product = require("../../models/Product");
 
 exports.addToCart = (req, res) => {
   const id = req.body.prodId;
