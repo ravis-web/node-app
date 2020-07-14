@@ -9,12 +9,12 @@ const router = express.Router();
 router.get('/', ecartCtrl.indexPage);
 router.get('/shop', prodCtrl.fetchProds);
 router.get('/product/:id', prodCtrl.fetchProd);
-// router.get('/cart', ecartCtrl.fetchCart);
+router.get('/cart', ecartCtrl.fetchCart);
 // router.get('/orders', ecartCtrl.fetchOrders);
 // router.get('/checkout', ecartCtrl.checkOut);
 
-// router.post('/cart', ecartCtrl.addToCart);
-// router.post('/rem-item', ecartCtrl.remFromCart);
+router.post('/cart', ecartCtrl.addToCart);
+router.post('/rem-item', ecartCtrl.remFromCart);
 // router.post('/new-order', ecartCtrl.addToOrder);
 
 /* --- serve static ---

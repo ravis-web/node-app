@@ -12,10 +12,10 @@
       <% products.forEach(product => { %>
       <li class="cart__item">
         <p><%= product.title %></p>
-        <p><%= product.cartItem.quantity %></p>
-        <p>₹ <%= product.cartItem.quantity * product.price %>/-</p>
+        <p><%= product.quantity %></p>
+        <p>₹ <%= product.quantity * product.price %>/-</p>
         <form action="/rem-item" method="post">
-          <input type="hidden" name="prodId" value="<%= product.id %>">
+          <input type="hidden" name="prodId" value="<%= product._id %>">
           <button class="btn danger" type="submit">Remove</button>
         </form>
       </li>
