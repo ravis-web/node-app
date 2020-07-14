@@ -8,6 +8,8 @@ const eshop = require('./routes/eshop');
 
 const Mongo = require('./utils/db-conn');
 
+const User = require('./models/User');
+
 const errCtrl = require('./controllers/errorControl');
 
 
@@ -44,8 +46,13 @@ app.use(bParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, nxt) => {
-  req.user = 'RX-Admin'; // set-user
-  nxt();
+  User.findId('5f0d5d57df6ebed9f556fb0c')
+    .then(user => {
+      req.user = user.name; // set-userId
+      req.userId = user._id; // set-userId
+      nxt();
+    })
+    .catch(err => console.log('No user found'));
 });
 
 

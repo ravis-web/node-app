@@ -1,13 +1,15 @@
+/* --- Product Model --- */
 const mongo = require('mongodb');
 const mongoDB = require('../utils/db-conn').mongoDB;
 
 class Product {
-  constructor(title, image, price, descr, id) {
+  constructor(title, image, price, descr, id, userId) {
     this.title = title;
     this.image = image;
     this.price = price;
     this.descr = descr;
     this._id = id ? new mongo.ObjectId(id) : null;
+    this.userId = userId;
   }
 
   save() {

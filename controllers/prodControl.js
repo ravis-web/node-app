@@ -13,7 +13,9 @@ exports.saveProd = (req, res) => {
     req.body.title,
     req.body.image,
     req.body.price,
-    req.body.descr
+    req.body.descr,
+    null,
+    req.userId
   );
   product.save()
     .then(reslt => res.redirect('/products'))
@@ -73,7 +75,8 @@ exports.updtProd = (req, res) => {
     req.body.image,
     req.body.price,
     req.body.descr,
-    req.body.prodId
+    req.body.prodId,
+    req.userId
   );
   return product.save() // update-db w. promise
     .then(r => res.redirect('/products'))
