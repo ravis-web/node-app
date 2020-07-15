@@ -1,7 +1,8 @@
 const Product = require("../models/Prod");
 
 exports.addToCart = (req, res) => {
-  Product.findId(req.body.prodId)
+  // Product.findId(req.body.prodId) // mongodb
+  Product.findById(req.body.prodId) // mongoose
     .then(prod => {
       return req.user.addToCart(prod)
     })
@@ -13,8 +14,9 @@ exports.addToCart = (req, res) => {
 };
 
 exports.fetchCart = (req, res) => {
-  req.user.fetchCart()
-    .then(prods => {
+  req.user.populate('cart.items.prodId').execPopulate() // ret user w prod-info
+    .then(user => {
+      const prods = user.cart.items;
       res.render('e-shop/e-cart', {
         products: prods,
         docTitle: 'Cart',
