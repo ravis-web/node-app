@@ -7,6 +7,7 @@ const admin = require('./routes/admin');
 const eshop = require('./routes/eshop');
 
 // const Mongo = require('./utils/db-conn');
+
 const mongoose = require('mongoose');
 const cluster = require('./utils/nosql-db').cluster;
 const configs = require('./utils/nosql-db').configs;
@@ -53,11 +54,11 @@ app.use(errCtrl.err404);
 
 
 // dbase-conn
-// Mongo.connect(() => app.listen(5000)); // start-server-callback
 mongoose.connect(cluster, configs)
   .then(conn => app.listen(5000)) // start-server
   .catch(err => console.log(err));
 
+// Mongo.connect(() => app.listen(5000)); // start-server-callback
 
 
 /* --- pug ---

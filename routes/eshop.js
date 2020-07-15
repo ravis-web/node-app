@@ -7,8 +7,8 @@ const ecartCtrl = require('../controllers/ecartControl');
 const router = express.Router();
 
 router.get('/', ecartCtrl.indexPage);
-// router.get('/shop', prodCtrl.fetchProds);
-// router.get('/product/:id', prodCtrl.fetchProd);
+router.get('/shop', prodCtrl.fetchProds);
+router.get('/product/:id', prodCtrl.fetchProd);
 // router.get('/cart', ecartCtrl.fetchCart);
 // router.get('/orders', ecartCtrl.fetchOrders);
 // router.get('/checkout', ecartCtrl.checkOut);
