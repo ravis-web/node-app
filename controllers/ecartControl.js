@@ -1,4 +1,5 @@
 const Product = require("../models/Prod");
+const Order = require("../models/Order");
 
 exports.addToCart = (req, res) => {
   // Product.findId(req.body.prodId) // mongodb
@@ -34,13 +35,28 @@ exports.remFromCart = (req, res) => {
 };
 
 exports.addToOrder = (req, res) => {
-  req.user.createOrder()
-    .then(result => res.redirect('/orders'))
+  req.user.populate('cart.items.prodId').execPopulate() // ret user w prod-info
+    .then(user => {
+      const prods = user.cart.items.map(i => {
+        return { prod: { ...i.prodId._doc }, quantity: i.quantity }; // '.doc' - w/o metadata
+      });
+      const order = new Order({
+        items: prods,
+        user: {
+          name: req.user.name,
+          // userId: req.user, // mongoose : maps only 'id'
+          userId: req.user._id
+        }
+      });
+      return order.save(); // ret prom
+    })
+    .then(result => req.user.clearCart())
+    .then(() => res.redirect('/orders'))
     .catch(err => console.log(err));
 };
 
 exports.fetchOrders = (req, res) => {
-  req.user.fetchOrders()
+  Order.find({ 'user.userId': req.user._id }) // mongoose
     .then(orders => {
       res.render('e-shop/order', {
         orders: orders,
