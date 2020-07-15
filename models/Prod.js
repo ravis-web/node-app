@@ -1,5 +1,5 @@
 /* --- Product Model --- */
-const mongo = require('mongodb');
+/*const mongo = require('mongodb');
 const mongoDB = require('../utils/db-conn').mongoDB;
 
 class Product {
@@ -48,4 +48,4 @@ class Product {
 
 }
 
-module.exports = Product;
+module.exports = Product;*/

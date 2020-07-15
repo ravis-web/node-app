@@ -1,5 +1,5 @@
 /* --- User Model --- */
-const mongo = require('mongodb');
+/*const mongo = require('mongodb');
 const mongoDB = require('../utils/db-conn').mongoDB;
 
 const ObjectId = mongo.ObjectId;
@@ -102,4 +102,4 @@ class User {
   }
 }
 
-module.exports = User;
+module.exports = User;*/

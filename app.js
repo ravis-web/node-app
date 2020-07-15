@@ -6,11 +6,15 @@ const bParser = require('body-parser');
 const admin = require('./routes/admin');
 const eshop = require('./routes/eshop');
 
-const Mongo = require('./utils/db-conn');
+// const Mongo = require('./utils/db-conn');
+const mongoose = require('mongoose');
+const cluster = require('./utils/nosql-db').cluster;
+const configs = require('./utils/nosql-db').configs;
 
 const User = require('./models/User');
 
 const errCtrl = require('./controllers/errorControl');
+const { nextTick } = require('process');
 
 
 // init express app
@@ -28,14 +32,16 @@ app.use(bParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, nxt) => {
-  User.findId('5f0d5d57df6ebed9f556fb0c')
-    .then(user => {
-      req.user = new User(user.name, user.email, user.cart, user._id);
-      // req.user = user.name; // set-userId
-      // req.userId = user._id; // set-userId
-      nxt();
-    })
-    .catch(err => console.log('No user found'));
+  req.user = { name: 'RX-Admin' };
+  nxt();
+  // User.findId('5f0d5d57df6ebed9f556fb0c')
+  //   .then(user => {
+  //     req.user = new User(user.name, user.email, user.cart, user._id);
+  //     // req.user = user.name; // set-userId
+  //     // req.userId = user._id; // set-userId
+  //     nxt();
+  //   })
+  //   .catch(err => console.log('No user found'));
 });
 
 
@@ -47,7 +53,10 @@ app.use(errCtrl.err404);
 
 
 // dbase-conn
-Mongo.connect(() => app.listen(5000)); // start-server-callback
+// Mongo.connect(() => app.listen(5000)); // start-server-callback
+mongoose.connect(cluster, configs)
+  .then(conn => app.listen(5000)) // start-server
+  .catch(err => console.log(err));
 
 
 
