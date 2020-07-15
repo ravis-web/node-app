@@ -14,6 +14,8 @@ exports.saveProd = (req, res) => {
     image: req.body.image,
     price: req.body.price,
     descr: req.body.descr,
+    userId: req.user._id
+    // userId: req.user // mongoose : only maps the _id'
   });
   product.save() // mongoose
     .then(reslt => res.redirect('/products'))
@@ -37,6 +39,8 @@ exports.fetchProd = (req, res) => {
 exports.fetchProds = (req, res) => {
   // Product.fetch() // mongodb
   Product.find() // mongoose
+    // .select('title price -_id') // mongoose
+    // .populate('userId', 'name') // mongoose
     .then(prods => {
       let view, docTitle;
       if (req.url === '/shop') {

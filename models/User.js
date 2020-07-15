@@ -1,5 +1,25 @@
 /* --- User Model --- */
-/*const mongo = require('mongodb');
+const mongoose = require('mongoose');
+const { text } = require('body-parser');
+
+const Schema = mongoose.Schema;
+
+const userSchema = new Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  cart: {
+    items: [{
+      prodId: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
+      quantity: { type: Number, required: true }
+    }]
+  }
+});
+
+module.exports = mongoose.model('User', userSchema);
+
+
+/* --- MongoDB ---
+const mongo = require('mongodb');
 const mongoDB = require('../utils/db-conn').mongoDB;
 
 const ObjectId = mongo.ObjectId;
@@ -102,4 +122,5 @@ class User {
   }
 }
 
-module.exports = User;*/
+module.exports = User;
+*/

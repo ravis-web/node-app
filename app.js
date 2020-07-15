@@ -33,16 +33,13 @@ app.use(bParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, nxt) => {
-  req.user = { name: 'RX-Admin' };
-  nxt();
-  // User.findId('5f0d5d57df6ebed9f556fb0c')
-  //   .then(user => {
-  //     req.user = new User(user.name, user.email, user.cart, user._id);
-  //     // req.user = user.name; // set-userId
-  //     // req.userId = user._id; // set-userId
-  //     nxt();
-  //   })
-  //   .catch(err => console.log('No user found'));
+  // User.findId('5f0d5d57df6ebed9f556fb0c') // mongodb
+  User.findById('5f0ed86f87daf92cd4e2f78f') // mongoose
+    .then(user => {
+      req.user = user; // set-user
+      nxt();
+    })
+    .catch(err => console.log('No user found'));
 });
 
 
@@ -55,7 +52,20 @@ app.use(errCtrl.err404);
 
 // dbase-conn
 mongoose.connect(cluster, configs)
-  .then(conn => app.listen(5000)) // start-server
+  .then(conn => {
+    console.log('cluster-connected');
+    User.findOne().then(user => {
+      if (!user) {
+        user = new User({
+          name: 'RX-Admin', email: 'admin@localhost', cart: { items: [] }
+        });
+        user.save()
+          .then(msg => console.log('user-added'))
+          .catch(err => console.log(err));
+      }
+      app.listen(5000);  // start-server
+    })
+  })
   .catch(err => console.log(err));
 
 // Mongo.connect(() => app.listen(5000)); // start-server-callback
