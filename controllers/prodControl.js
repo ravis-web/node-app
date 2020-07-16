@@ -1,11 +1,14 @@
 const Product = require('../models/Prod');
 
 exports.addProd = (req, res) => {
-  res.render('products/add-prod', {
-    docTitle: 'Add Product',
-    path: '/products',
-    user: req.user
-  });
+  if (req.session.isLogged) {
+    res.render('products/add-prod', {
+      docTitle: 'Add Product',
+      path: '/products',
+      user: req.user,
+      isLogged: req.session.isLogged
+    });
+  } else res.redirect('/error');
 };
 
 exports.saveProd = (req, res) => {
@@ -15,7 +18,7 @@ exports.saveProd = (req, res) => {
     price: req.body.price,
     descr: req.body.descr,
     userId: req.user._id
-    // userId: req.user // mongoose : only maps the _id'
+    // userId: req.user // mongoose : maps only '_id'
   });
   product.save() // mongoose
     .then(reslt => res.redirect('/products'))
@@ -30,7 +33,8 @@ exports.fetchProd = (req, res) => {
         product: prod,
         docTitle: 'Product Details',
         path: '/shop',
-        user: req.user
+        user: req.user,
+        isLogged: req.session.isLogged
       });
     })
     .catch(err => console.log(err));
@@ -47,31 +51,37 @@ exports.fetchProds = (req, res) => {
         view = 'e-shop/eshop';
         docTitle = 'E-Shop';
       } else {
-        view = 'products/prod-lists';
-        docTitle = 'Products';
+        if (req.session.isLogged) {
+          view = 'products/prod-lists';
+          docTitle = 'Products';
+        } else return res.redirect('/error');
       }
       res.render(view, {
         products: prods,
         docTitle: docTitle,
         path: req.url,
-        user: req.user
+        user: req.user,
+        isLogged: req.session.isLogged
       });
     })
     .catch(err => console.log(err));
 };
 
 exports.editProd = (req, res) => {
-  // Product.findId(req.params.id) // mongodb
-  Product.findById(req.params.id) // mongoose
-    .then(prod => {
-      res.render('products/edit-prod', {
-        product: prod,
-        docTitle: 'Edit Product',
-        path: '/products',
-        user: req.user
-      });
-    })
-    .catch(err => console.log(err));
+  if (req.session.isLogged) {
+    // Product.findId(req.params.id) // mongodb
+    Product.findById(req.params.id) // mongoose
+      .then(prod => {
+        res.render('products/edit-prod', {
+          product: prod,
+          docTitle: 'Edit Product',
+          path: '/products',
+          user: req.user,
+          isLogged: req.session.isLogged
+        });
+      })
+      .catch(err => console.log(err));
+  } else res.redirect('/error');
 };
 
 exports.updtProd = (req, res) => {

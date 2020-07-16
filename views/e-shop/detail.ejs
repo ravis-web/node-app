@@ -17,12 +17,14 @@
         <h5 class="product__price">₹ <%= product.price %>/-</h5>
         <p class="product_description"><%= product.descr %></p>
       </div>
+      <% if(isLogged) { %>
       <div class="card__actions">
         <form action="/cart" method="post">
           <button class="btn" type="submit"> Add to Cart</button>
           <input type="hidden" name="prodId" value="<%= product._id %>">
         </form>
       </div>
+      <% } %>
     </article>
   </div>
   <% } else { %>

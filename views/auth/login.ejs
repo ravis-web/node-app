@@ -1,0 +1,23 @@
+<%- include('../includes/head.ejs') %>
+
+<link rel="stylesheet" href="/styles/auth.css">
+<link rel="stylesheet" href="/styles/form.css">
+
+<%- include('../includes/navb.ejs') %>
+
+<main>
+  <form class="login-form" action="/login" method="post">
+    <h3><%= docTitle %></h3>
+    <div class="form-control">
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" autofocus />
+    </div>
+    <div class="form-control">
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" />
+    </div>
+    <button class="btn" type="submit">Login</button>
+  </form>
+</main>
+
+<%- include('../includes/close.ejs') %>

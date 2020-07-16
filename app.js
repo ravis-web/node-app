@@ -2,9 +2,12 @@ const path = require('path');
 
 const express = require('express');
 const bParser = require('body-parser');
+const session = require('express-session');
+const MongoStore = require('connect-mongodb-session')(session);
 
 const admin = require('./routes/admin');
 const eshop = require('./routes/eshop');
+const authen = require('./routes/authen');
 
 // const Mongo = require('./utils/db-conn');
 
@@ -22,6 +25,14 @@ const { nextTick } = require('process');
 const app = express();
 
 
+// init session-storage
+const store = new MongoStore({
+  uri: cluster,
+  collection: 'sessions'
+  // expires: 'date-format' // auto-clean
+});
+
+
 // template-engines
 /* --- ejs ---*/
 app.set('view engine', 'ejs');
@@ -32,10 +43,21 @@ app.set('views', 'views');
 app.use(bParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+  secret: 'long-string', // hash-key
+  resave: false,
+  saveUninitialized: false,
+  store: store // session-storage
+  // cookie: {expires: 'date-format'} // cookie-configs for session
+}));
+
 app.use((req, res, nxt) => {
+  if (!req.session.user) { // session-model
+    return nxt();
+  }
   // User.findId('5f0d5d57df6ebed9f556fb0c') // mongodb
-  User.findById('5f0ed86f87daf92cd4e2f78f') // mongoose
-    .then(user => {
+  User.findById(req.session.user._id) // mongoose
+    .then(user => { // mongoose - model
       req.user = user; // set-user
       nxt();
     })
@@ -46,6 +68,7 @@ app.use((req, res, nxt) => {
 // routes
 app.use(admin.routes);
 app.use(eshop.routes);
+app.use(authen.routes);
 
 app.use(errCtrl.err404);
 

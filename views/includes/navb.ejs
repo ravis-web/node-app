@@ -1,50 +1,76 @@
 </head>
 
-<%const nav = {
-    'Home': '/',
-    'Shop': '/shop',
-    'Cart': '/cart',
-    'Orders': '/orders',
-    'Products': '/products',
-    'Checkout': '/checkout'
-  };
-%>
-
 <body>
   <div class="backdrop"></div>
   <header class="main-header">
     <button id="side-menu-toggle">Menu</button>
     <nav class="main-header__nav">
       <ul class="main-header__item-list">
-        <%for (const key in nav) {
-            if (nav[key] === path) { %>
         <li class="main-header__item">
-          <a class="active" href="<%= nav[key] %>"><%= key %></a>
+          <a class="<%= path === '/' ? 'active' : '' %>" href="/">Home</a>
         </li>
-        <%  } else { %>
         <li class="main-header__item">
-          <a href="<%= nav[key] %>"><%= key %></a>
+          <a class="<%= path === '/shop' ? 'active' : '' %>" href="/shop">Shop</a>
         </li>
-        <% }
-          }
-        %>
+        <% if(isLogged) { %>
+        <li class="main-header__item">
+          <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Cart</a>
+        </li>
+        <li class="main-header__item">
+          <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders">Orders</a>
+        </li>
+        <li class="main-header__item">
+          <a class="<%= path === '/products' ? 'active' : '' %>" href="/products">Products</a>
+        </li>
+        <% } %>
+      </ul>
+      <ul class="main-header__item-list">
+        <% if(!isLogged) { %>
+        <li class="main-header__item">
+          <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
+        </li>
+        <% } else { %>
+        <li class="main-header__item">
+          <form action="/logout" method="post">
+            <button type="submit">Logout</button>
+          </form>
+        </li>
+        <% } %>
       </ul>
     </nav>
   </header>
 
   <nav class="mobile-nav">
     <ul class="mobile-nav__item-list">
-      <%for (const key in nav) {
-        if (nav[key] === path) { %>
       <li class="mobile-nav__item">
-        <a class="active" href="<%= nav[key] %>"><%= key %></a>
+        <a class="<%= path === '/' ? 'active' : '' %>" href="/">Home</a>
       </li>
-      <%  } else { %>
       <li class="mobile-nav__item">
-        <a href="<%= nav[key] %>"><%= key %></a>
+        <a class="<%= path === '/shop' ? 'active' : '' %>" href="/shop">Shop</a>
       </li>
-      <% }
-      }
-      %>
+      <% if(isLogged) { %>
+      <li class="mobile-nav__item">
+        <a class="<%= path === '/cart' ? 'active' : '' %>" href="/cart">Cart</a>
+      </li>
+      <li class="mobile-nav__item">
+        <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders">Orders</a>
+      </li>
+      <li class="mobile-nav__item">
+        <a class="<%= path === '/products' ? 'active' : '' %>" href="/products">Products</a>
+      </li>
+      <% } %>
+    </ul>
+    <ul class="mobile-nav__item-list">
+      <% if(!isLogged) { %>
+      <li class="mobile-nav__item">
+        <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
+      </li>
+      <% } else { %>
+      <li class="mobile-nav__item">
+        <form action="/logout" method="post">
+          <button type="submit">Logout</button>
+        </form>
+      </li>
+      <% } %>
     </ul>
   </nav>

@@ -15,17 +15,20 @@ exports.addToCart = (req, res) => {
 };
 
 exports.fetchCart = (req, res) => {
-  req.user.populate('cart.items.prodId').execPopulate() // ret user w prod-info
-    .then(user => {
-      const prods = user.cart.items;
-      res.render('e-shop/e-cart', {
-        products: prods,
-        docTitle: 'Cart',
-        path: req.url,
-        user: req.user
-      });
-    })
-    .catch(err => console.log(err));
+  if (req.session.isLogged) {
+    req.user.populate('cart.items.prodId').execPopulate() // ret user w prod-info
+      .then(user => {
+        const prods = user.cart.items;
+        res.render('e-shop/e-cart', {
+          products: prods,
+          docTitle: 'Cart',
+          path: req.url,
+          user: req.user,
+          isLogged: req.session.isLogged
+        });
+      })
+      .catch(err => console.log(err));
+  } else res.redirect('/error');
 };
 
 exports.remFromCart = (req, res) => {
@@ -44,7 +47,7 @@ exports.addToOrder = (req, res) => {
         items: prods,
         user: {
           name: req.user.name,
-          // userId: req.user, // mongoose : maps only 'id'
+          // userId: req.user, // mongoose : maps only '_id'
           userId: req.user._id
         }
       });
@@ -56,30 +59,37 @@ exports.addToOrder = (req, res) => {
 };
 
 exports.fetchOrders = (req, res) => {
-  Order.find({ 'user.userId': req.user._id }) // mongoose
-    .then(orders => {
-      res.render('e-shop/order', {
-        orders: orders,
-        docTitle: 'Orders',
-        path: req.url,
-        user: req.user
-      });
-    })
-    .catch(err => console.log(err));
+  if (req.session.isLogged) {
+    Order.find({ 'user.userId': req.user._id }) // mongoose
+      .then(orders => {
+        res.render('e-shop/order', {
+          orders: orders,
+          docTitle: 'Orders',
+          path: req.url,
+          user: req.user,
+          isLogged: req.session.isLogged
+        });
+      })
+      .catch(err => console.log(err));
+  } else res.redirect('/error');
 };
 
 exports.checkOut = (req, res) => {
-  res.render('e-shop/ckout', {
-    docTitle: 'Checkout',
-    path: req.url,
-    user: req.user
-  });
+  if (req.session.isLogged) {
+    res.render('e-shop/ckout', {
+      docTitle: 'Checkout',
+      path: req.url,
+      user: req.user,
+      isLogged: req.session.isLogged
+    });
+  } else res.redirect('/error');
 };
 
 exports.indexPage = (req, res) => {
   res.render('e-shop/index', {
     docTitle: 'Home',
     path: req.url,
-    user: req.user
+    user: req.user,
+    isLogged: req.session.isLogged
   });
 };
