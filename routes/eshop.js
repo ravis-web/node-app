@@ -1,5 +1,7 @@
 const express = require('express');
 
+const isAuthen = require('../middleware/is-authen');
+
 const prodCtrl = require('../controllers/prodControl');
 const ecartCtrl = require('../controllers/ecartControl');
 
@@ -9,13 +11,13 @@ const router = express.Router();
 router.get('/', ecartCtrl.indexPage);
 router.get('/shop', prodCtrl.fetchProds);
 router.get('/product/:id', prodCtrl.fetchProd);
-router.get('/cart', ecartCtrl.fetchCart);
-router.get('/orders', ecartCtrl.fetchOrders);
-router.get('/checkout', ecartCtrl.checkOut);
+router.get('/cart', isAuthen, ecartCtrl.fetchCart);
+router.get('/orders', isAuthen, ecartCtrl.fetchOrders);
+router.get('/checkout', isAuthen, ecartCtrl.checkOut);
 
-router.post('/cart', ecartCtrl.addToCart);
-router.post('/rem-item', ecartCtrl.remFromCart);
-router.post('/new-order', ecartCtrl.addToOrder);
+router.post('/cart', isAuthen, ecartCtrl.addToCart);
+router.post('/rem-item', isAuthen, ecartCtrl.remFromCart);
+router.post('/new-order', isAuthen, ecartCtrl.addToOrder);
 
 /* --- serve static ---
 const path = require('path');

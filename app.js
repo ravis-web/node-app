@@ -77,21 +77,25 @@ app.use(errCtrl.err404);
 mongoose.connect(cluster, configs)
   .then(conn => {
     console.log('cluster-connected');
-    User.findOne().then(user => {
-      if (!user) {
-        user = new User({
-          name: 'RX-Admin', email: 'admin@localhost', cart: { items: [] }
-        });
-        user.save()
-          .then(msg => console.log('user-added'))
-          .catch(err => console.log(err));
-      }
-      app.listen(5000);  // start-server
-    })
+    app.listen(5000);  // start-server
   })
   .catch(err => console.log(err));
 
 // Mongo.connect(() => app.listen(5000)); // start-server-callback
+
+
+/* --- user-create ---
+User.findOne().then(user => {
+  if (!user) {
+    user = new User({
+      name: 'RX-Admin', email: 'admin@localhost', cart: { items: [] }
+    });
+    user.save()
+      .then(msg => console.log('user-added'))
+      .catch(err => console.log(err));
+  }
+})
+*/
 
 
 /* --- pug ---
@@ -113,13 +117,11 @@ app.set('views', 'views');
 */
 
 
-
 /* --- serve static ---
 res.status(404).sendFile(
   path.join(__dirname, 'views', '404-page.html')
 );
 */
-
 
 
 /* --- Sequelize ---
@@ -171,13 +173,11 @@ dbase
 */
 
 
-
 /* --- MySQL database ---
 dbase.execute('SELECT * FROM products')
   .then(([res]) => console.log(res[0]))
   .catch(err => console.log(err));
 */
-
 
 
 /* --- Vanilla Node ---

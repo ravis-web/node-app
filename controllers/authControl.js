@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs');
+
 const User = require('../models/User');
 
 exports.loginPage = (req, res) => {
@@ -13,14 +15,22 @@ exports.loginPage = (req, res) => {
 };
 
 exports.loginUser = (req, res) => {
-  User.findById('5f0ed86f87daf92cd4e2f78f')
+  // User.findById('5f0ed86f87daf92cd4e2f78f')
+  User.findOne({ email: req.body.email })
     .then(user => {
-      req.session.user = user;
-      req.session.isLogged = true;
-      req.session.save(msg => { // db-sync
-        console.log('login', msg);
-        res.redirect('/');
-      });
+      if (!user) return res.redirect('/login');
+      return bcrypt.compare(req.body.password, user.password)
+        .then(doMatch => {
+          if (doMatch) {
+            req.session.user = user;
+            req.session.isLogged = true;
+            return req.session.save(msg => { // db-sync
+              console.log('login', msg);
+              res.redirect('/');
+            });
+          }
+          res.redirect('/login');
+        })
     })
     .catch(err => console.log(err));
 };
@@ -30,4 +40,40 @@ exports.logoutUser = (req, res) => {
     console.log('logout', msg);
     res.redirect('/');
   });
+};
+
+exports.regPage = (req, res) => {
+  if (!req.session.isLogged) {
+    res.render('auth/regist', {
+      docTitle: 'Register',
+      path: req.url,
+      isLogged: req.session.isLogged
+    });
+  } else res.redirect('/');
+};
+
+exports.regUser = (req, res) => {
+  User.findOne({ email: req.body.email })
+    .then(usr => {
+      // user-email exists
+      if (usr) {
+        return res.redirect('/register');
+      }
+      // email doesnt exist
+      return bcrypt.hash(req.body.password, 12) // hashing w. salt
+        .then(hashPass => {
+          const user = new User({
+            name: req.body.name,
+            email: req.body.email,
+            password: hashPass,
+            cart: { items: [] }
+          });
+          return user.save();
+        })
+        .then(msg => {
+          console.log('user-added');
+          res.redirect('/login');
+        });
+    })
+    .catch(err => console.log(err));
 };

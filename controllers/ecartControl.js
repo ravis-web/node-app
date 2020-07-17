@@ -15,20 +15,18 @@ exports.addToCart = (req, res) => {
 };
 
 exports.fetchCart = (req, res) => {
-  if (req.session.isLogged) {
-    req.user.populate('cart.items.prodId').execPopulate() // ret user w prod-info
-      .then(user => {
-        const prods = user.cart.items;
-        res.render('e-shop/e-cart', {
-          products: prods,
-          docTitle: 'Cart',
-          path: req.url,
-          user: req.user,
-          isLogged: req.session.isLogged
-        });
-      })
-      .catch(err => console.log(err));
-  } else res.redirect('/error');
+  req.user.populate('cart.items.prodId').execPopulate() // ret user w prod-info
+    .then(user => {
+      const prods = user.cart.items;
+      res.render('e-shop/e-cart', {
+        products: prods,
+        docTitle: 'Cart',
+        path: req.url,
+        user: req.user,
+        isLogged: req.session.isLogged
+      });
+    })
+    .catch(err => console.log(err));
 };
 
 exports.remFromCart = (req, res) => {
@@ -59,30 +57,26 @@ exports.addToOrder = (req, res) => {
 };
 
 exports.fetchOrders = (req, res) => {
-  if (req.session.isLogged) {
-    Order.find({ 'user.userId': req.user._id }) // mongoose
-      .then(orders => {
-        res.render('e-shop/order', {
-          orders: orders,
-          docTitle: 'Orders',
-          path: req.url,
-          user: req.user,
-          isLogged: req.session.isLogged
-        });
-      })
-      .catch(err => console.log(err));
-  } else res.redirect('/error');
+  Order.find({ 'user.userId': req.user._id }) // mongoose
+    .then(orders => {
+      res.render('e-shop/order', {
+        orders: orders,
+        docTitle: 'Orders',
+        path: req.url,
+        user: req.user,
+        isLogged: req.session.isLogged
+      });
+    })
+    .catch(err => console.log(err));
 };
 
 exports.checkOut = (req, res) => {
-  if (req.session.isLogged) {
-    res.render('e-shop/ckout', {
-      docTitle: 'Checkout',
-      path: req.url,
-      user: req.user,
-      isLogged: req.session.isLogged
-    });
-  } else res.redirect('/error');
+  res.render('e-shop/ckout', {
+    docTitle: 'Checkout',
+    path: req.url,
+    user: req.user,
+    isLogged: req.session.isLogged
+  });
 };
 
 exports.indexPage = (req, res) => {
