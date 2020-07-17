@@ -5,6 +5,9 @@ const bParser = require('body-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongodb-session')(session);
 
+const csrf = require('csurf');
+const flash = require('connect-flash');
+
 const admin = require('./routes/admin');
 const eshop = require('./routes/eshop');
 const authen = require('./routes/authen');
@@ -33,6 +36,10 @@ const store = new MongoStore({
 });
 
 
+// init csrfToken
+const csrfSecure = csrf(); // init fx-wrap
+
+
 // template-engines
 /* --- ejs ---*/
 app.set('view engine', 'ejs');
@@ -50,6 +57,16 @@ app.use(session({
   store: store // session-storage
   // cookie: {expires: 'date-format'} // cookie-configs for session
 }));
+
+app.use(csrfSecure); // csrf-middleware uses session
+app.use(flash()); // flash redirect-data uses session
+
+// rendered-views : local-vars
+app.use((req, res, nxt) => {
+  res.locals.isLogged = req.session.isLogged;
+  res.locals.csrfToken = req.csrfToken();
+  nxt();
+});
 
 app.use((req, res, nxt) => {
   if (!req.session.user) { // session-model

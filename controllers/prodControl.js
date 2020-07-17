@@ -4,8 +4,7 @@ exports.addProd = (req, res) => {
   res.render('products/add-prod', {
     docTitle: 'Add Product',
     path: '/products',
-    user: req.user,
-    isLogged: req.session.isLogged
+    user: req.user
   });
 };
 
@@ -31,8 +30,7 @@ exports.fetchProd = (req, res) => {
         product: prod,
         docTitle: 'Product Details',
         path: '/shop',
-        user: req.user,
-        isLogged: req.session.isLogged
+        user: req.user
       });
     })
     .catch(err => console.log(err));
@@ -56,8 +54,7 @@ exports.fetchProds = (req, res) => {
         products: prods,
         docTitle: docTitle,
         path: req.url,
-        user: req.user,
-        isLogged: req.session.isLogged
+        user: req.user
       });
     })
     .catch(err => console.log(err));
@@ -71,8 +68,7 @@ exports.editProd = (req, res) => {
         product: prod,
         docTitle: 'Edit Product',
         path: '/products',
-        user: req.user,
-        isLogged: req.session.isLogged
+        user: req.user
       });
     })
     .catch(err => console.log(err));

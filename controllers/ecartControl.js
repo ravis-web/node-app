@@ -22,8 +22,7 @@ exports.fetchCart = (req, res) => {
         products: prods,
         docTitle: 'Cart',
         path: req.url,
-        user: req.user,
-        isLogged: req.session.isLogged
+        user: req.user
       });
     })
     .catch(err => console.log(err));
@@ -63,8 +62,7 @@ exports.fetchOrders = (req, res) => {
         orders: orders,
         docTitle: 'Orders',
         path: req.url,
-        user: req.user,
-        isLogged: req.session.isLogged
+        user: req.user
       });
     })
     .catch(err => console.log(err));
@@ -74,8 +72,7 @@ exports.checkOut = (req, res) => {
   res.render('e-shop/ckout', {
     docTitle: 'Checkout',
     path: req.url,
-    user: req.user,
-    isLogged: req.session.isLogged
+    user: req.user
   });
 };
 
@@ -83,7 +80,6 @@ exports.indexPage = (req, res) => {
   res.render('e-shop/index', {
     docTitle: 'Home',
     path: req.url,
-    user: req.user,
-    isLogged: req.session.isLogged
+    user: req.user
   });
 };

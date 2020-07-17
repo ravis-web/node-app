@@ -8,8 +8,7 @@ exports.loginPage = (req, res) => {
   } else {
     res.render('auth/login', {
       docTitle: 'Login',
-      path: req.url,
-      isLogged: req.session.isLogged
+      path: req.url
     });
   }
 };
@@ -44,10 +43,13 @@ exports.logoutUser = (req, res) => {
 
 exports.regPage = (req, res) => {
   if (!req.session.isLogged) {
+    let msg = req.flash('msg');
+    if (msg.length > 0) msg = msg[0];
+    else msg = null;
     res.render('auth/regist', {
       docTitle: 'Register',
       path: req.url,
-      isLogged: req.session.isLogged
+      msg: msg
     });
   } else res.redirect('/');
 };
@@ -57,6 +59,8 @@ exports.regUser = (req, res) => {
     .then(usr => {
       // user-email exists
       if (usr) {
+        // redirect-flash
+        req.flash('msg', 'user already exists w. this email');
         return res.redirect('/register');
       }
       // email doesnt exist

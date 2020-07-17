@@ -28,6 +28,7 @@
     <input type="hidden" name="prodId" value="<%= product._id %>" />
     <button class="btn" type="submit">Update</button>
     <a href="/products" class="btn">Cancel</a>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
   </form>
 </main>
 

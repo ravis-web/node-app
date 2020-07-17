@@ -16,6 +16,7 @@
         <p>₹ <%= product.quantity * product.prodId.price %>/-</p>
         <form action="/rem-item" method="post">
           <input type="hidden" name="prodId" value="<%= product.prodId._id %>">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <button class="btn danger" type="submit">Remove</button>
         </form>
       </li>
@@ -23,6 +24,7 @@
     </ul>
     <div class="centered">
       <form action="/new-order" method="post">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <button type="submit" class="btn">Order Now</button>
         <a href="/shop" class="btn"> Add Items </a>
       </form>
