@@ -2,6 +2,16 @@ const bcrypt = require('bcryptjs');
 
 const User = require('../models/User');
 
+/* --- NodeMailer : SendGrid ---
+const nodemail = require('nodemailer');
+const sendGrid = require('nodemailer-sendgrid-transport');
+
+const transporter = nodemail.createTransport(sendGrid({
+  auth: { api_key: 'longhashedString' }
+}));
+*/
+
+
 exports.loginPage = (req, res) => {
   if (req.session.isLogged) {
     res.redirect('/');
@@ -77,6 +87,15 @@ exports.regUser = (req, res) => {
         .then(msg => {
           console.log('user-added');
           res.redirect('/login');
+
+          /* --- send an email ---
+          return transporter.sendMail({
+            to: 'dest',
+            from: 'src',
+            subject: 'welcome',
+            html: 'markup'
+          });
+          */
         });
     })
     .catch(err => console.log(err));
