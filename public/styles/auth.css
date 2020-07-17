@@ -4,3 +4,14 @@
   margin: auto;
   display: block;
 }
+
+.message {
+    position: relative;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    color: #404045;
+    background-color: #e3f6f5;
+    border-color: #bae8e8;
+  }

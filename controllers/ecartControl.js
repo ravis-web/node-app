@@ -75,11 +75,3 @@ exports.checkOut = (req, res) => {
     user: req.user
   });
 };
-
-exports.indexPage = (req, res) => {
-  res.render('e-shop/index', {
-    docTitle: 'Home',
-    path: req.url,
-    user: req.user
-  });
-};

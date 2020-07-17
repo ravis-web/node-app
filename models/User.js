@@ -13,7 +13,9 @@ const userSchema = new Schema({
       prodId: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
       quantity: { type: Number, required: true }
     }]
-  }
+  },
+  resetToken: String,
+  resetExpire: Date
 });
 
 userSchema.methods.addToCart = function (prod) {

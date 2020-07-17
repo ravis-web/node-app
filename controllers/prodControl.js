@@ -26,33 +26,25 @@ exports.fetchProd = (req, res) => {
   // Product.findId(req.params.id) // mongodb
   Product.findById(req.params.id) // mongoose
     .then(prod => {
-      res.render('e-shop/detail', {
-        product: prod,
-        docTitle: 'Product Details',
-        path: '/shop',
-        user: req.user
-      });
+      if (prod.userId.toString() !== req.user._id.toString()) {
+        res.render('e-shop/detail', {
+          product: prod,
+          docTitle: 'Product Details',
+          path: '/shop',
+          user: req.user
+        });
+      } else return res.redirect('/');
     })
     .catch(err => console.log(err));
 };
 
 exports.fetchProds = (req, res) => {
   // Product.fetch() // mongodb
-  Product.find() // mongoose
-    // .select('title price -_id') // mongoose
-    // .populate('userId', 'name') // mongoose
+  Product.find({ userId: req.user._id }) // mongoose
     .then(prods => {
-      let view, docTitle;
-      if (req.url === '/shop') {
-        view = 'e-shop/eshop';
-        docTitle = 'E-Shop';
-      } else {
-        view = 'products/prod-lists';
-        docTitle = 'Products';
-      }
-      res.render(view, {
+      res.render('products/prod-lists', {
         products: prods,
-        docTitle: docTitle,
+        docTitle: 'Products',
         path: req.url,
         user: req.user
       });
@@ -64,12 +56,14 @@ exports.editProd = (req, res) => {
   // Product.findId(req.params.id) // mongodb
   Product.findById(req.params.id) // mongoose
     .then(prod => {
-      res.render('products/edit-prod', {
-        product: prod,
-        docTitle: 'Edit Product',
-        path: '/products',
-        user: req.user
-      });
+      if (prod.userId.toString() !== req.user._id.toString()) {
+        res.render('products/edit-prod', {
+          product: prod,
+          docTitle: 'Edit Product',
+          path: '/products',
+          user: req.user
+        });
+      } else return res.redirect('/');
     })
     .catch(err => console.log(err));
 };
@@ -77,19 +71,23 @@ exports.editProd = (req, res) => {
 exports.updtProd = (req, res) => {
   Product.findById(req.body.prodId)
     .then(prod => {
+      if (prod.userId.toString() !== req.user._id.toString()) {
+        return res.redirect('/');
+      }
       prod.title = req.body.title;
       prod.image = req.body.image;
       prod.price = req.body.price;
       prod.descr = req.body.descr;
       return prod.save() // update-db w. promise
+        .then(r => res.redirect('/products'))
     })
-    .then(r => res.redirect('/products'))
     .catch(err => console.log(err));
 };
 
 exports.deltProd = (req, res) => {
   // Product.deleteId(req.body.prodId) // mongodb
-  Product.findByIdAndRemove(req.body.prodId) // mongoose
+  // Product.findByIdAndRemove(req.body.prodId) // mongoose
+  Product.deleteOne({ _id: req.body.prodId, userId: req.user._id }) // mongoose
     .then(r => res.redirect('/products'))
     .catch(err => console.log(err));
 };

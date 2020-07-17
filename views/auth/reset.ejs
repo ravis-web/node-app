@@ -6,19 +6,21 @@
 <%- include('../includes/navb.ejs') %>
 
 <main>
-  <form class="login-form" action="/login" method="post">
+  <form class="login-form" action="/reset" method="post">
     <h3><%= docTitle %></h3>
     <div class="form-control">
-      <label for="email">Email</label>
-      <input type="email" name="email" id="email" autofocus />
+      <% if(msg) { %>
+      <div class="message"><%= msg %></div>
+      <% } %>
     </div>
     <div class="form-control">
-      <label for="password">Password</label>
+      <label for="password">New Password</label>
       <input type="password" name="password" id="password" />
     </div>
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-    <button class="btn" type="submit">Login</button>
-    <a href="/forgot" class="btn">Forgot</a>
+    <input type="hidden" name="userId" value="<%= userId %>">
+    <input type="hidden" name="token" value="<%= token %>">
+    <button class="btn" type="submit">Update</button>
   </form>
 </main>
 

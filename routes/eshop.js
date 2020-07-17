@@ -2,15 +2,15 @@ const express = require('express');
 
 const isAuthen = require('../middleware/is-authen');
 
-const prodCtrl = require('../controllers/prodControl');
+const shopCtrl = require('../controllers/shopControl');
 const ecartCtrl = require('../controllers/ecartControl');
 
 // express-router
 const router = express.Router();
 
-router.get('/', ecartCtrl.indexPage);
-router.get('/shop', prodCtrl.fetchProds);
-router.get('/product/:id', prodCtrl.fetchProd);
+router.get('/', shopCtrl.indexPage);
+router.get('/shop', shopCtrl.fetchProds);
+router.get('/product/:id', shopCtrl.fetchProd);
 router.get('/cart', isAuthen, ecartCtrl.fetchCart);
 router.get('/orders', isAuthen, ecartCtrl.fetchOrders);
 router.get('/checkout', isAuthen, ecartCtrl.checkOut);
