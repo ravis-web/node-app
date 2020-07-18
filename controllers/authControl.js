@@ -2,6 +2,8 @@ const crypto = require('crypto');
 
 const bcrypt = require('bcryptjs');
 
+const { validationResult } = require('express-validator');
+
 const User = require('../models/User');
 
 /* --- NodeMailer : SendGrid ---
@@ -18,18 +20,33 @@ exports.loginPage = (req, res) => {
   if (req.session.isLogged) {
     res.redirect('/');
   } else {
+    const msg = req.flash('msg')[0];
     res.render('auth/login', {
       docTitle: 'Login',
-      path: req.url
+      path: req.url,
+      msg: msg
     });
   }
 };
 
 exports.loginUser = (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).render('auth/login', {
+      docTitle: 'Login',
+      path: req.url,
+      msg: errors.array()[0].msg
+    });
+  }
+
+  /* --- user-validation --- */
   // User.findById('5f0ed86f87daf92cd4e2f78f')
-  User.findOne({ email: req.body.email })
+  return User.findOne({ email: req.body.email })
     .then(user => {
-      if (!user) return res.redirect('/login');
+      if (!user) {
+        req.flash('msg', 'user doesnt exist');
+        return res.status(422).redirect('/login');
+      }
       return bcrypt.compare(req.body.password, user.password)
         .then(doMatch => {
           if (doMatch) {
@@ -40,7 +57,8 @@ exports.loginUser = (req, res) => {
               res.redirect('/');
             });
           }
-          res.redirect('/login');
+          req.flash('msg', 'invalid credentials');
+          res.status(422).redirect('/login');
         })
     })
     .catch(err => console.log(err));
@@ -67,38 +85,47 @@ exports.regPage = (req, res) => {
 };
 
 exports.regUser = (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).render('auth/regist', {
+      docTitle: 'Register',
+      path: req.url,
+      msg: errors.array()[0].msg
+    });
+  }
+  /* --- user - email exists-- -
   User.findOne({ email: req.body.email })
     .then(usr => {
-      // user-email exists
       if (usr) {
         // redirect-flash
         req.flash('msg', 'user already exists w. this email');
         return res.redirect('/register');
       }
-      // email doesnt exist
-      return bcrypt.hash(req.body.password, 12) // hashing w. salt
-        .then(hashPass => {
-          const user = new User({
-            name: req.body.name,
-            email: req.body.email,
-            password: hashPass,
-            cart: { items: [] }
-          });
-          return user.save();
-        })
-        .then(msg => {
-          console.log('user-added');
-          res.redirect('/login');
+    }).catch();
+  */
+  // email doesnt exist
+  return bcrypt.hash(req.body.password, 12) // hashing w. salt
+    .then(hashPass => {
+      const user = new User({
+        name: req.body.name,
+        email: req.body.email,
+        password: hashPass,
+        cart: { items: [] }
+      });
+      return user.save();
+    })
+    .then(msg => {
+      console.log('user-added');
+      res.redirect('/login');
 
-          /* --- send an email ---
-          return transporter.sendMail({
-            to: 'dest',
-            from: 'src',
-            subject: 'welcome',
-            html: 'markup'
-          });
-          */
-        });
+      /* --- send an email ---
+      return transporter.sendMail({
+        to: 'dest',
+        from: 'src',
+        subject: 'welcome',
+        html: 'markup'
+      });
+      */
     })
     .catch(err => console.log(err));
 };
