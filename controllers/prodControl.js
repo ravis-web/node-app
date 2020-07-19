@@ -8,7 +8,7 @@ exports.addProd = (req, res) => {
   });
 };
 
-exports.saveProd = (req, res) => {
+exports.saveProd = (req, res, nxt) => {
   const product = new Product({
     title: req.body.title,
     image: req.body.image,
@@ -19,14 +19,14 @@ exports.saveProd = (req, res) => {
   });
   product.save() // mongoose
     .then(reslt => res.redirect('/products'))
-    .catch(err => console.log(err));
+    .catch(err => nxt(err));
 };
 
-exports.fetchProd = (req, res) => {
+exports.fetchProd = (req, res, nxt) => {
   // Product.findId(req.params.id) // mongodb
   Product.findById(req.params.id) // mongoose
     .then(prod => {
-      if (prod.userId.toString() !== req.user._id.toString()) {
+      if (prod.userId.toString() === req.user._id.toString()) {
         res.render('e-shop/detail', {
           product: prod,
           docTitle: 'Product Details',
@@ -35,10 +35,10 @@ exports.fetchProd = (req, res) => {
         });
       } else return res.redirect('/');
     })
-    .catch(err => console.log(err));
+    .catch(err => nxt(err));
 };
 
-exports.fetchProds = (req, res) => {
+exports.fetchProds = (req, res, nxt) => {
   // Product.fetch() // mongodb
   Product.find({ userId: req.user._id }) // mongoose
     .then(prods => {
@@ -49,14 +49,14 @@ exports.fetchProds = (req, res) => {
         user: req.user
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => nxt(err));
 };
 
-exports.editProd = (req, res) => {
+exports.editProd = (req, res, nxt) => {
   // Product.findId(req.params.id) // mongodb
   Product.findById(req.params.id) // mongoose
     .then(prod => {
-      if (prod.userId.toString() !== req.user._id.toString()) {
+      if (prod.userId.toString() === req.user._id.toString()) {
         res.render('products/edit-prod', {
           product: prod,
           docTitle: 'Edit Product',
@@ -65,10 +65,10 @@ exports.editProd = (req, res) => {
         });
       } else return res.redirect('/');
     })
-    .catch(err => console.log(err));
+    .catch(err => nxt(err));
 };
 
-exports.updtProd = (req, res) => {
+exports.updtProd = (req, res, nxt) => {
   Product.findById(req.body.prodId)
     .then(prod => {
       if (prod.userId.toString() !== req.user._id.toString()) {
@@ -81,13 +81,13 @@ exports.updtProd = (req, res) => {
       return prod.save() // update-db w. promise
         .then(r => res.redirect('/products'))
     })
-    .catch(err => console.log(err));
+    .catch(err => nxt(err));
 };
 
-exports.deltProd = (req, res) => {
+exports.deltProd = (req, res, nxt) => {
   // Product.deleteId(req.body.prodId) // mongodb
   // Product.findByIdAndRemove(req.body.prodId) // mongoose
   Product.deleteOne({ _id: req.body.prodId, userId: req.user._id }) // mongoose
     .then(r => res.redirect('/products'))
-    .catch(err => console.log(err));
+    .catch(err => nxt(err));
 };

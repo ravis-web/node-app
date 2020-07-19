@@ -1,7 +1,7 @@
 const Product = require("../models/Prod");
 const Order = require("../models/Order");
 
-exports.addToCart = (req, res) => {
+exports.addToCart = (req, res, nxt) => {
   // Product.findId(req.body.prodId) // mongodb
   Product.findById(req.body.prodId) // mongoose
     .then(prod => {
@@ -11,10 +11,10 @@ exports.addToCart = (req, res) => {
       console.log('added-to-cart');
       res.redirect('/cart');
     })
-    .catch(err => console.log(err));
+    .catch(err => nxt(err));
 };
 
-exports.fetchCart = (req, res) => {
+exports.fetchCart = (req, res, nxt) => {
   req.user.populate('cart.items.prodId').execPopulate() // ret user w prod-info
     .then(user => {
       const prods = user.cart.items;
@@ -25,16 +25,16 @@ exports.fetchCart = (req, res) => {
         user: req.user
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => nxt(err));
 };
 
-exports.remFromCart = (req, res) => {
+exports.remFromCart = (req, res, nxt) => {
   req.user.deleteItem(req.body.prodId)
     .then(() => res.redirect('/cart'))
-    .catch(err => console.log(err));
+    .catch(err => nxt(err));
 };
 
-exports.addToOrder = (req, res) => {
+exports.addToOrder = (req, res, nxt) => {
   req.user.populate('cart.items.prodId').execPopulate() // ret user w prod-info
     .then(user => {
       const prods = user.cart.items.map(i => {
@@ -52,10 +52,10 @@ exports.addToOrder = (req, res) => {
     })
     .then(result => req.user.clearCart())
     .then(() => res.redirect('/orders'))
-    .catch(err => console.log(err));
+    .catch(err => nxt(err));
 };
 
-exports.fetchOrders = (req, res) => {
+exports.fetchOrders = (req, res, nxt) => {
   Order.find({ 'user.userId': req.user._id }) // mongoose
     .then(orders => {
       res.render('e-shop/order', {
@@ -65,7 +65,7 @@ exports.fetchOrders = (req, res) => {
         user: req.user
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => nxt(err));
 };
 
 exports.checkOut = (req, res) => {

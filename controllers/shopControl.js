@@ -8,7 +8,7 @@ exports.indexPage = (req, res) => {
   });
 };
 
-exports.fetchProd = (req, res) => {
+exports.fetchProd = (req, res, nxt) => {
   // Product.findId(req.params.id) // mongodb
   Product.findById(req.params.id) // mongoose
     .then(prod => {
@@ -19,10 +19,10 @@ exports.fetchProd = (req, res) => {
         user: req.user
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => nxt(err));
 };
 
-exports.fetchProds = (req, res) => {
+exports.fetchProds = (req, res, nxt) => {
   // Product.fetch() // mongodb
   Product.find() // mongoose
     // .select('title price -_id') // mongoose
@@ -35,5 +35,5 @@ exports.fetchProds = (req, res) => {
         user: req.user
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => nxt(err));
 };

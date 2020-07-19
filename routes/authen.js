@@ -12,13 +12,13 @@ const errCtrl = require('../controllers/errorControl');
 const router = express.Router();
 
 router.get('/login', authCtrl.loginPage);
-router.get('/error', errCtrl.err404);
+router.get('/error', errCtrl.err500);
 router.get('/register', authCtrl.regPage);
 router.get('/forgot', authCtrl.forgotPage);
 router.get('/reset/:token', authCtrl.resetPage);
 
 router.post('/login', [
-  body('email').isEmail().withMessage('enter a valid email')
+  body('email').isEmail().withMessage('enter a valid email').normalizeEmail()
   /* --- custom validation ---
   .custom((val, { req }) => {
     return User.findOne({ email: val }).then(usr => {
@@ -27,7 +27,7 @@ router.post('/login', [
     });
   })
   */,
-  body('password', 'enter a valid password').isLength({ min: 6 }).isAlphanumeric()
+  body('password', 'enter a valid password').isLength({ min: 6 }).isAlphanumeric().trim()
 ], authCtrl.loginUser);
 router.post('/logout', isAuthen, authCtrl.logoutUser);
 router.post('/register', [
@@ -39,13 +39,13 @@ router.post('/register', [
           // user-email exists
           if (usr) return Promise.reject('user already exists');
         });
-    }),
+    }).normalizeEmail(),
   body('password', 'please enter a valid password')
-    .isLength({ min: 5, max: 28 }).isAlphanumeric(),
+    .isLength({ min: 5, max: 28 }).isAlphanumeric().trim(),
   body('repassword').custom((val, { req }) => {
     if (val !== req.body.password) throw new Error('passwords do not match');
     return true;
-  })],
+  }).trim()],
   authCtrl.regUser);
 router.post('/forgot', authCtrl.resetLink);
 router.post('/reset', authCtrl.resetPass);

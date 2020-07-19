@@ -21,7 +21,6 @@ const configs = require('./utils/nosql-db').configs;
 const User = require('./models/User');
 
 const errCtrl = require('./controllers/errorControl');
-const { nextTick } = require('process');
 
 
 // init express app
@@ -78,7 +77,7 @@ app.use((req, res, nxt) => {
       req.user = user; // set-user
       nxt();
     })
-    .catch(err => console.log('No user found'));
+    .catch(err => nxt(err));
 });
 
 
@@ -87,7 +86,16 @@ app.use(admin.routes);
 app.use(eshop.routes);
 app.use(authen.routes);
 
+
+// error-handler
 app.use(errCtrl.err404);
+app.use((err, req, res, nxt) => {
+  console.log('async-error : ', err.message);
+  res.status(500).render('errors/500-page', {
+    docTitle: 'Server Error',
+    path: req.url
+  })
+});
 
 
 // dbase-conn

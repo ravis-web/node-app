@@ -29,7 +29,7 @@ exports.loginPage = (req, res) => {
   }
 };
 
-exports.loginUser = (req, res) => {
+exports.loginUser = (req, res, nxt) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).render('auth/login', {
@@ -45,7 +45,7 @@ exports.loginUser = (req, res) => {
     .then(user => {
       if (!user) {
         req.flash('msg', 'user doesnt exist');
-        return res.status(422).redirect('/login');
+        return res.redirect('/login');
       }
       return bcrypt.compare(req.body.password, user.password)
         .then(doMatch => {
@@ -58,10 +58,10 @@ exports.loginUser = (req, res) => {
             });
           }
           req.flash('msg', 'invalid credentials');
-          res.status(422).redirect('/login');
+          res.redirect('/login');
         })
     })
-    .catch(err => console.log(err));
+    .catch(err => nxt(err));
 };
 
 exports.logoutUser = (req, res) => {
@@ -84,7 +84,7 @@ exports.regPage = (req, res) => {
   } else res.redirect('/');
 };
 
-exports.regUser = (req, res) => {
+exports.regUser = (req, res, nxt) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).render('auth/regist', {
@@ -127,7 +127,7 @@ exports.regUser = (req, res) => {
       });
       */
     })
-    .catch(err => console.log(err));
+    .catch(err => nxt(err));
 };
 
 exports.forgotPage = (req, res) => {
@@ -145,7 +145,7 @@ exports.forgotPage = (req, res) => {
   }
 };
 
-exports.resetLink = (req, res) => {
+exports.resetLink = (req, res, nxt) => {
   // 1. create token
   crypto.randomBytes(32, (err, buffer) => {
     if (err) return res.redirect('/forgot');
@@ -177,11 +177,11 @@ exports.resetLink = (req, res) => {
           */
         })
       })
-      .catch(err => console.log(err));
+      .catch(err => nxt(err));
   });
 };
 
-exports.resetPage = (req, res) => {
+exports.resetPage = (req, res, nxt) => {
   // 1. validate user
   User.findOne({
     resetToken: req.params.token,
@@ -200,13 +200,16 @@ exports.resetPage = (req, res) => {
           token: req.params.token,
           userId: usr._id.toString()
         });
-      } else return res.redirect('/error');
+      } else {
+        req.flash('msg', 'inappropriate reset-request')
+        return res.redirect('/login');
+      }
     })
-    .catch(err => console.log(err));
+    .catch(err => nxt(err));
 
 };
 
-exports.resetPass = (req, res) => {
+exports.resetPass = (req, res, nxt) => {
   let updUser;
   User.findOne({
     resetToken: req.body.token,
@@ -223,6 +226,9 @@ exports.resetPass = (req, res) => {
       updUser.resetExpire = undefined;
       return updUser.save();
     })
-    .then(rslt => { res.redirect('/login') })
-    .catch();
+    .then(rslt => {
+      req.flash('msg', 'password reset successful')
+      res.redirect('/login')
+    })
+    .catch(err => nxt(err));
 };
