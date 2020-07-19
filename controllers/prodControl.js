@@ -1,3 +1,5 @@
+const fileOps = require('../utils/file-ops');
+
 const Product = require('../models/Prod');
 
 exports.addProd = (req, res) => {
@@ -11,7 +13,7 @@ exports.addProd = (req, res) => {
 exports.saveProd = (req, res, nxt) => {
   const product = new Product({
     title: req.body.title,
-    image: req.body.image,
+    image: req.file.path,
     price: req.body.price,
     descr: req.body.descr,
     userId: req.user._id
@@ -75,7 +77,10 @@ exports.updtProd = (req, res, nxt) => {
         return res.redirect('/');
       }
       prod.title = req.body.title;
-      prod.image = req.body.image;
+      if (req.file.path) {
+        fileOps.delFile(prod.image); // del the prev img async
+        prod.image = req.file.path;
+      }
       prod.price = req.body.price;
       prod.descr = req.body.descr;
       return prod.save() // update-db w. promise
@@ -87,7 +92,12 @@ exports.updtProd = (req, res, nxt) => {
 exports.deltProd = (req, res, nxt) => {
   // Product.deleteId(req.body.prodId) // mongodb
   // Product.findByIdAndRemove(req.body.prodId) // mongoose
-  Product.deleteOne({ _id: req.body.prodId, userId: req.user._id }) // mongoose
+  Product.findById(req.body.prodId)
+    .then(prod => {
+      if (!prod) return nxt(new Error('product not found'));
+      fileOps.delFile(prod.image);
+      return Product.deleteOne({ _id: req.body.prodId, userId: req.user._id }) // mongoose
+    })
     .then(r => res.redirect('/products'))
     .catch(err => nxt(err));
 };

@@ -21,10 +21,22 @@ const configs = require('./utils/nosql-db').configs;
 const User = require('./models/User');
 
 const errCtrl = require('./controllers/errorControl');
+const multer = require('multer');
 
 
 // init express app
 const app = express();
+
+
+// multer - configs
+const fileStore = multer.diskStorage({
+  destination: (req, file, callb) => callb(null, 'uploads'),
+  filename: (req, file, callb) => callb(null, Date.now() + '-' + file.originalname)
+});
+const fileFiltr = (req, file, callb) => {
+  if (file.mimetype === 'image/png') callb(null, true);
+  else callb(null, false);
+};
 
 
 // init session-storage
@@ -48,6 +60,8 @@ app.set('views', 'views');
 // register middleware
 app.use(bParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use(multer({ storage: fileStore, fileFilter: fileFiltr }).single('image'));
 
 app.use(session({
   secret: 'long-string', // hash-key

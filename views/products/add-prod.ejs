@@ -7,18 +7,22 @@
 <%- include('../includes/users.ejs') %>
 
 <main>
-  <form class="product-form" action="/save-prod" method="post">
+  <form class="product-form" action="/save-prod" method="post" enctype="multipart/form-data">
     <h3><%= docTitle %></h3>
     <div class="form-control">
       <label for="title">Title</label>
       <input type="text" name="title" id="title" autofocus />
     </div>
-    <div class="form-control">
+    <!-- <div class="form-control">
       <label for="image">Image</label>
       <input type="text" name="image" id="image" />
+    </div> -->
+    <div class="form-control">
+      <label for="image">Image</label>
+      <input type="file" name="image" id="image" />
     </div>
     <div class="form-control">
-      <label for="proce">Price</label>
+      <label for="price">Price</label>
       <input type="number" name="price" id="price" step="0.01" min="0.00" />
     </div>
     <div class="form-control">

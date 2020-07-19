@@ -3,22 +3,33 @@
 <link rel="stylesheet" href="/styles/prod.css">
 <link rel="stylesheet" href="/styles/form.css">
 
+<style>
+  img {
+    max-height: 6rem;
+  }
+</style>
+
 <%- include('../includes/navb.ejs') %>
 <%- include('../includes/users.ejs') %>
 
 <main>
-  <form class="product-form" action="/updt-prod" method="post">
+  <form class="product-form" action="/updt-prod" method="post" enctype="multipart/form-data">
     <h3><%= docTitle %></h3>
     <div class="form-control">
       <label for="title">Title</label>
       <input type="text" name="title" id="title" autofocus value="<%= product.title %>" />
     </div>
-    <div class="form-control">
+    <!-- <div class="form-control">
       <label for="image">Image</label>
       <input type="text" name="image" id="image" value="<%= product.image %>" />
+    </div> -->
+    <div class="form-control">
+      <label for="image">Image</label>
+      <input type="file" name="image" id="image" />
+      <img src="/<%= product.image %>" alt="<%= product.title %>">
     </div>
     <div class="form-control">
-      <label for="proce">Price</label>
+      <label for="price">Price</label>
       <input type="number" name="price" id="price" step="0.01" min="0.00" value="<%= product.price %>" />
     </div>
     <div class="form-control">
