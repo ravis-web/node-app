@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const delFile = (filepath) => { 
+const delFile = (filepath) => {
   fs.unlink(filepath, (err) => {
     if (err) throw (err);
   });

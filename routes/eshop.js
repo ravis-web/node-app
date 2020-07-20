@@ -13,6 +13,7 @@ router.get('/shop', shopCtrl.fetchProds);
 router.get('/product/:id', shopCtrl.fetchProd);
 router.get('/cart', isAuthen, ecartCtrl.fetchCart);
 router.get('/orders', isAuthen, ecartCtrl.fetchOrders);
+router.get('/invoice/:id', isAuthen, ecartCtrl.fetchInvoice);
 router.get('/checkout', isAuthen, ecartCtrl.checkOut);
 
 router.post('/cart', isAuthen, ecartCtrl.addToCart);

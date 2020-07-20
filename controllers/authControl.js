@@ -7,6 +7,9 @@ const { validationResult } = require('express-validator');
 const User = require('../models/User');
 
 /* --- NodeMailer : SendGrid ---
+
+sendgrid : deprecated. use @sendgrid/mail w/o nodemailer
+
 const nodemail = require('nodemailer');
 const sendGrid = require('nodemailer-sendgrid-transport');
 
