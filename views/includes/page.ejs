@@ -1,0 +1,9 @@
+<section class="centered pagination">
+  <% if(page.curr > 1) { for(let i = 1; i < page.curr; i++) { %>
+  <a href="?page=<%= i %>" class=""><%= i %></a>
+  <% } } %>
+  <a href="?page=<%= page.curr %>" class=" active"><%= page.curr %></a>
+  <% if(page.curr < page.last) { for(let i = page.curr + 1; i <= page.last; i++) { %>
+  <a href="?page=<%= i %>" class=""><%= i %></a>
+  <% } } %>
+</section>
