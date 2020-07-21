@@ -96,7 +96,7 @@ exports.deltProd = (req, res, nxt) => {
     .then(prod => {
       if (!prod) return nxt(new Error('product not found'));
       fileOps.delFile(prod.image);
-      return Product.deleteOne({ _id: req.body.prodId, userId: req.user._id }) // mongoose
+      return Product.deleteOne({ _id: req.params.prodId, userId: req.user._id }) // mongoose
     })
     // .then(r => res.redirect('/products'))
     .then(r => res.status(200).json({ message: 'prod-deleted' }))

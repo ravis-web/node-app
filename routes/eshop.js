@@ -20,6 +20,11 @@ router.post('/cart', isAuthen, ecartCtrl.addToCart);
 router.post('/rem-item', isAuthen, ecartCtrl.remFromCart);
 router.post('/new-order', isAuthen, ecartCtrl.addToOrder);
 
+/* --- Stripe : Callback --- */
+router.get('/checkout/success', isAuthen, ecartCtrl.addToOrder);
+router.get('/checkout/cancel', isAuthen, ecartCtrl.fetchCart);
+
+
 /* --- serve static ---
 const path = require('path');
 const appDir = require('../utils/abs-path');

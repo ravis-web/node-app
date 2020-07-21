@@ -1,6 +1,6 @@
 const Product = require('../models/Prod');
 
-const PROD_PER_PAGE = 1;
+const PROD_PER_PAGE = 20;
 
 exports.indexPage = (req, res) => {
   res.render('e-shop/index', {

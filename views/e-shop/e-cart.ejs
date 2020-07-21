@@ -12,22 +12,16 @@
       <% products.forEach(product => { %>
       <li class="cart__item">
         <p><%= product.prodId.title %></p>
+        <p>₹ <%= product.prodId.price %>/-</p>
         <p><%= product.quantity %></p>
         <p>₹ <%= product.quantity * product.prodId.price %>/-</p>
-        <form action="/rem-item" method="post">
-          <input type="hidden" name="prodId" value="<%= product.prodId._id %>">
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-          <button class="btn danger" type="submit">Remove</button>
-        </form>
       </li>
       <% })%>
     </ul>
     <div class="centered">
-      <form action="/new-order" method="post">
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-        <button type="submit" class="btn">Order Now</button>
-        <a href="/shop" class="btn"> Add Items </a>
-      </form>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <a href="/checkout" class="btn">Order Now</a>
+      <a href="/shop" class="btn"> Add Items </a>
     </div>
     <% } else { %>
     <div class="centered">
