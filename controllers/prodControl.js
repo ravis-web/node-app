@@ -92,12 +92,13 @@ exports.updtProd = (req, res, nxt) => {
 exports.deltProd = (req, res, nxt) => {
   // Product.deleteId(req.body.prodId) // mongodb
   // Product.findByIdAndRemove(req.body.prodId) // mongoose
-  Product.findById(req.body.prodId)
+  Product.findById(req.params.prodId)
     .then(prod => {
       if (!prod) return nxt(new Error('product not found'));
       fileOps.delFile(prod.image);
       return Product.deleteOne({ _id: req.body.prodId, userId: req.user._id }) // mongoose
     })
-    .then(r => res.redirect('/products'))
-    .catch(err => nxt(err));
+    // .then(r => res.redirect('/products'))
+    .then(r => res.status(200).json({ message: 'prod-deleted' }))
+    .catch(err => res.status(500).json({ message: 'deletion-failed!' }));
 };
