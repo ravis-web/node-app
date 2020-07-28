@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
 
 const express = require('express');
 const bParser = require('body-parser');
@@ -27,6 +28,11 @@ const User = require('./models/User');
 
 const errCtrl = require('./controllers/errorControl');
 const multer = require('multer');
+
+
+// SSL-TLS : Encryption
+const certif = fs.readFileSync('server.cert');
+const privateKey = fs.readFileSync('server.key');
 
 
 // init express app
@@ -135,7 +141,13 @@ mongoose.connect(cluster, configs)
   .then(conn => {
     console.log('cluster-connected');
     console.log(process.env.ENVIR_MODE);
-    app.listen(5000);  // start-server
+
+    /* http-mode */
+    app.listen(process.env.PORT || 5000);  // start-server
+
+    /* https-mode : ssl-encryption
+    https.createServer({ key: privateKey, cert: certif }, app).listen(process.env.PORT || 5000);
+    */
   })
   .catch(err => console.log(err));
 

@@ -18,3 +18,7 @@ utils/sql-conn.js
 
 # request-logs
 access.log
+
+# ssl-encryption
+server.cert
+server.key
