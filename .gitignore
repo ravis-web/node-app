@@ -1,15 +1,20 @@
 # vs code
 .vscode
 
+# environ
+.env
+
 # node modules
 node_modules
+
+# nodemon
+nodemon.json
 
 # package-lock
 package-lock.json
 
 # database
 utils/sql-conn.js
-utils/nosql-db.js
 
-# stripe
-utils/stripe-in.js
+# request-logs
+access.log

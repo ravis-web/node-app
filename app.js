@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 
 const express = require('express');
@@ -7,6 +8,10 @@ const MongoStore = require('connect-mongodb-session')(session);
 
 const csrf = require('csurf');
 const flash = require('connect-flash');
+
+const helmet = require('helmet');
+const compress = require('compression');
+const morgan = require('morgan');
 
 const admin = require('./routes/admin');
 const eshop = require('./routes/eshop');
@@ -55,6 +60,19 @@ const csrfSecure = csrf(); // init fx-wrap
 /* --- ejs ---*/
 app.set('view engine', 'ejs');
 app.set('views', 'views');
+
+
+// secure-headers
+app.use(helmet());
+
+// asset-compression
+app.use(compress());
+
+// request-logger
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, 'access.log'), { flags: 'a' }
+);
+app.use(morgan('combined', { stream: accessLogStream }));
 
 
 // register middleware
@@ -116,6 +134,7 @@ app.use((err, req, res, nxt) => {
 mongoose.connect(cluster, configs)
   .then(conn => {
     console.log('cluster-connected');
+    console.log(process.env.ENVIR_MODE);
     app.listen(5000);  // start-server
   })
   .catch(err => console.log(err));
